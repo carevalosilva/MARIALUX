@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html class="light" lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Inicio | MARIALUX</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600&amp;family=Playfair+Display:ital,wght@0,400;0,700;1,400&amp;display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#135bec",
+                        "background-light": "#fdfcf9", // Ivory tone
+                        "background-dark": "#101622",
+                        "marian-soft": "#e7effd",
+                    },
+                    fontFamily: {
+                        "display": ["Public Sans", "sans-serif"],
+                        "serif": ["Playfair Display", "serif"],
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+    <style type="text/tailwindcss">
+        body {
+            font-family: 'Public Sans', sans-serif;
+            background-color: #fdfcf9;}
+        .serif-font {
+            font-family: 'Playfair Display', serif;
+        }
+        .sepia-filter {
+            filter: sepia(0.4) grayscale(0.8) contrast(1.1);
+        }
+    </style>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark text-slate-800 dark:text-slate-200 antialiased">
+    <nav
+        class="fixed top-0 w-full z-50 bg-white/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-primary/10">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <span class="material-icons-outlined text-primary text-3xl">church</span>
+                <span
+                    class="serif-font text-xl font-bold tracking-tight text-slate-900 dark:text-white uppercase tracking-widest">MARIA<span
+                        class="text-primary">LUX</span></span>
+            </div>
+            <div class="hidden md:flex items-center space-x-10 text-sm font-medium tracking-wide uppercase">
+                <a class="text-primary border-b-2 border-primary pb-1" href="index.html">Inicio</a>
+                <a class="hover:text-primary transition-colors pb-1 border-b-2 border-transparent"
+                    href="explorador.html">Explorador</a>
+                <a class="hover:text-primary transition-colors pb-1 border-b-2 border-transparent"
+                    href="doctrina.html">Doctrina</a>
+                <a class="hover:text-primary transition-colors pb-1 border-b-2 border-transparent"
+                    href="detalle.html">Ficha</a>
+            </div>
+            <div class="flex items-center">
+                <div class="relative group">
+                    <span
+                        class="material-icons-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors">search</span>
+                    <input
+                        class="pl-10 pr-4 py-2 bg-slate-50 dark:bg-slate-800 border-transparent focus:border-primary focus:ring-0 rounded-full text-sm w-48 transition-all focus:w-64"
+                        placeholder="Buscar advocación..." type="text" />
+                </div>
+            </div>
+        </div>
+    </nav>
+    <header class="relative pt-48 pb-32 overflow-hidden">
+        <div class="absolute inset-0 z-0 opacity-10">
+            <div class="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-primary/20 to-transparent"></div>
+        </div>
+        <div class="max-w-4xl mx-auto px-6 text-center relative z-10">
+            <span
+                class="inline-block px-4 py-1.5 bg-primary/10 text-primary text-xs font-semibold tracking-widest uppercase rounded-full mb-8">Santa
+                María, Madre de Dios</span>
+            <h1 class="serif-font text-5xl md:text-7xl text-slate-900 dark:text-white leading-tight mb-8 italic">
+                Bajo tu amparo <br />nos acogemos
+            </h1>
+            <p
+                class="text-lg md:text-xl text-slate-600 dark:text-slate-400 font-light leading-relaxed mb-10 max-w-2xl mx-auto">
+                Explore la riqueza histórica y espiritual de las diferentes manifestaciones de la Virgen María a través
+                del tiempo y la geografía.
+            </p>
+            <div class="flex flex-col items-center gap-4">
+                <a class="bg-primary hover:bg-primary/90 text-white px-10 py-4 rounded-full font-medium transition-all shadow-lg shadow-primary/20 flex items-center gap-2"
+                    href="#explorar">
+                    Iniciar Exploración
+                    <span class="material-icons-outlined text-sm">arrow_downward</span>
+                </a>
+                <p class="text-xs text-slate-400 italic mt-6 flex items-center gap-2">
+                    <span class="material-icons-outlined text-sm">info</span>
+                    Todas las advocaciones corresponden a la única Virgen María.
+                </p>
+            </div>
+        </div>
+    </header>
+    <section class="py-24 bg-white dark:bg-background-dark/50" id="explorar">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="serif-font text-3xl text-slate-900 dark:text-white mb-4">Criterios de Exploración</h2>
+                <div class="w-12 h-0.5 bg-primary mx-auto"></div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <a class="group relative bg-background-light dark:bg-slate-900 rounded-xl overflow-hidden border border-slate-100 dark:border-slate-800 transition-all hover:shadow-2xl hover:-translate-y-1"
+                    href="explorador?continente=europa">
+                    <div class="aspect-[4/5] relative">
+                        <img alt="Región"
+                            class="absolute inset-0 w-full h-full object-cover sepia-filter opacity-60 group-hover:opacity-80 group-hover:scale-105 transition-all duration-700"
+                            data-alt="Ancient map with pilgrimage details and sanctuary locations"
+                            src="assets/images/1883_religions_map.jpg" />
+                        <div
+                            class="absolute inset-0 bg-gradient-to-t from-background-light via-transparent to-transparent dark:from-background-dark">
+                        </div>
+                    </div>
+                    <div class="absolute bottom-0 left-0 p-8 w-full text-center">
+                        <div
+                            class="mb-4 inline-flex items-center justify-center w-14 h-14 rounded-full bg-white dark:bg-slate-800 shadow-md text-primary group-hover:bg-primary group-hover:text-white transition-colors duration-300">
+                            <span class="material-symbols-outlined font-light">explore</span>
+                        </div>
+                        <h3 class="serif-font text-2xl mb-2 text-slate-900 dark:text-white">Por Región</h3>
+                        <p class="text-sm text-slate-500 dark:text-slate-400 font-light px-4">Descubra las advocaciones
+                            por continentes y santuarios nacionales.</p>
+                    </div>
+                </a>
+                <a class="group relative bg-background-light dark:bg-slate-900 rounded-xl overflow-hidden border border-slate-100 dark:border-slate-800 transition-all hover:shadow-2xl hover:-translate-y-1"
+                    href="explorador?siglo=Siglo XX">
+                    <div class="aspect-[4/5] relative">
+                        <img alt="Siglo"
+                            class="absolute inset-0 w-full h-full object-cover sepia-filter opacity-60 group-hover:opacity-80 group-hover:scale-105 transition-all duration-700"
+                            data-alt="Mosaic of Virgin and Child from Basilica of Sant'Apollinare Nuovo, Ravenna"
+                            src="assets/images/ravenna_mosaic.jpg" />
+                        <div
+                            class="absolute inset-0 bg-gradient-to-t from-background-light via-transparent to-transparent dark:from-background-dark">
+                        </div>
+                    </div>
+                    <div class="absolute bottom-0 left-0 p-8 w-full text-center">
+                        <div
+                            class="mb-4 inline-flex items-center justify-center w-14 h-14 rounded-full bg-white dark:bg-slate-800 shadow-md text-primary group-hover:bg-primary group-hover:text-white transition-colors duration-300">
+                            <span class="material-symbols-outlined font-light">hourglass_empty</span>
+                        </div>
+                        <h3 class="serif-font text-2xl mb-2 text-slate-900 dark:text-white">Por Siglo</h3>
+                        <p class="text-sm text-slate-500 dark:text-slate-400 font-light px-4">Un recorrido cronológico
+                            desde los primeros siglos hasta la actualidad.</p>
+                    </div>
+                </a>
+                <a class="group relative bg-background-light dark:bg-slate-900 rounded-xl overflow-hidden border border-slate-100 dark:border-slate-800 transition-all hover:shadow-2xl hover:-translate-y-1"
+                    href="explorador?tipo=Aparición">
+                    <div class="aspect-[4/5] relative">
+                        <img alt="Tipo"
+                            class="absolute inset-0 w-full h-full object-cover sepia-filter opacity-60 group-hover:opacity-80 group-hover:scale-105 transition-all duration-700"
+                            data-alt="Classical Byzantine icon or sculpture of Virgin Mary in prayer"
+                            src="assets/images/Vladimirskaya.jpg" />
+                        <div
+                            class="absolute inset-0 bg-gradient-to-t from-background-light via-transparent to-transparent dark:from-background-dark">
+                        </div>
+                    </div>
+                    <div class="absolute bottom-0 left-0 p-8 w-full text-center">
+                        <div
+                            class="mb-4 inline-flex items-center justify-center w-14 h-14 rounded-full bg-white dark:bg-slate-800 shadow-md text-primary group-hover:bg-primary group-hover:text-white transition-colors duration-300">
+                            <span class="material-symbols-outlined font-light">auto_awesome</span>
+                        </div>
+                        <h3 class="serif-font text-2xl mb-2 text-slate-900 dark:text-white">Por Tipo</h3>
+                        <p class="text-sm text-slate-500 dark:text-slate-400 font-light px-4">Apariciones, patronazgos,
+                            dogmas e iconografías marianas.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+    <section class="py-32 px-6">
+        <div class="max-w-3xl mx-auto text-center">
+            <span class="material-icons-outlined text-primary/40 text-4xl mb-6">format_quote</span>
+            <blockquote class="serif-font text-3xl italic text-slate-700 dark:text-slate-300 leading-relaxed mb-8">
+                "La Virgen María, que en el momento de la Anunciación respondió con su 'Fiat', es el modelo perfecto de
+                la fe cristiana."
+            </blockquote>
+            <cite class="text-xs uppercase tracking-widest text-primary font-semibold not-italic">— Reflexión
+                Eclesial</cite>
+        </div>
+    </section>
+    <footer class="bg-white dark:bg-background-dark border-t border-primary/5 py-16">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                <div class="col-span-1 md:col-span-2">
+                    <div class="flex items-center gap-2 mb-6">
+                        <span class="material-icons-outlined text-primary text-2xl">church</span>
+                        <span class="serif-font text-lg font-bold tracking-tight uppercase">MARIA<span
+                                class="text-primary">LUX</span></span>
+                    </div>
+                    <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed max-w-sm">
+                        Un espacio educativo dedicado a la difusión y el estudio de las diversas expresiones de devoción
+                        a la Madre de Dios en todo el mundo.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="text-xs font-bold uppercase tracking-widest mb-6">Explorar</h4>
+                    <ul class="space-y-4 text-sm text-slate-600 dark:text-slate-400">
+                        <li><a class="hover:text-primary transition-colors" href="explorador.html">Explorador</a></li>
+                        <li><a class="hover:text-primary transition-colors" href="doctrina.html">Doctrina</a></li>
+                        <li><a class="hover:text-primary transition-colors" href="detalle.html">Ficha de Ejemplo</a>
+                        </li>
+                        <li><a class="hover:text-primary transition-colors" href="index.html">Inicio</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-xs font-bold uppercase tracking-widest mb-6">Proyecto</h4>
+                    <ul class="space-y-4 text-sm text-slate-600 dark:text-slate-400">
+                        <li><a class="hover:text-primary transition-colors" href="#">Sobre Nosotros</a></li>
+                        <li><a class="hover:text-primary transition-colors" href="#">Documentación</a></li>
+                        <li><a class="hover:text-primary transition-colors" href="#">Contacto</a></li>
+                        <li><a class="hover:text-primary transition-colors" href="#">Aviso Legal</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="pt-8 border-t border-primary/5 flex flex-col md:flex-row justify-between items-center gap-6">
+                <p class="text-xs text-slate-400">
+                    © 2024 Advocaciones Marianas. El contenido de este portal tiene carácter educativo y divulgativo.
+                </p>
+                <div class="flex items-center gap-4">
+                    <a class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-50 dark:bg-slate-800 text-slate-400 hover:bg-primary hover:text-white transition-all"
+                        href="#">
+                        <span class="material-icons-outlined text-base">share</span>
+                    </a>
+                    <a class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-50 dark:bg-slate-800 text-slate-400 hover:bg-primary hover:text-white transition-all"
+                        href="#">
+                        <span class="material-icons-outlined text-base">email</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+</body>
+
+</html>
