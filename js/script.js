@@ -83,7 +83,81 @@ async function initDetallePage() {
     }
 }
 
+function clearDetalleFields() {
+    // --- Reset Title ---
+    var titleEl = document.querySelector('#adv-title');
+    if (titleEl) titleEl.textContent = '';
+
+    // --- Reset Document title ---
+    document.title = 'Detalle | MARIALUX';
+
+    // --- Reset Breadcrumbs ---
+    var breadcrumbContinent = document.querySelector('#breadcrumb-continent');
+    var breadcrumbName = document.querySelector('#breadcrumb-name');
+    if (breadcrumbContinent) breadcrumbContinent.textContent = '';
+    if (breadcrumbName) breadcrumbName.textContent = '';
+
+    // --- Reset Main Image ---
+    var imgEl = document.querySelector('#adv-image');
+    if (imgEl) {
+        imgEl.src = '';
+        imgEl.alt = '';
+    }
+    var captionEl = document.querySelector('#adv-image-caption');
+    if (captionEl) captionEl.textContent = '';
+
+    // --- Reset Estatus Eclesiástico ---
+    var estatusEl = document.querySelector('#adv-estatus');
+    if (estatusEl) estatusEl.textContent = '';
+
+    // --- Reset Key Data Grid ---
+    var paisEl = document.querySelector('#adv-pais');
+    if (paisEl) paisEl.textContent = '—';
+
+    var sigloEl = document.querySelector('#adv-siglo');
+    if (sigloEl) sigloEl.textContent = '—';
+
+    var festividadEl = document.querySelector('#adv-festividad');
+    if (festividadEl) festividadEl.textContent = '—';
+
+    // --- Reset Sección: Historia ---
+    var historiaEl = document.querySelector('#adv-historia');
+    if (historiaEl) historiaEl.innerHTML = '';
+
+    // --- Reset Sección: Significado Espiritual ---
+    var significadoEl = document.querySelector('#adv-significado');
+    if (significadoEl) significadoEl.innerHTML = '';
+
+    var citaEl = document.querySelector('#adv-cita');
+    if (citaEl) {
+        citaEl.textContent = '';
+        citaEl.style.display = 'none';
+    }
+
+    // --- Reset Sección: Iconografía ---
+    var iconografiaList = document.querySelector('#adv-iconografia');
+    if (iconografiaList) {
+        iconografiaList.innerHTML = '';
+        var section = iconografiaList.closest('section');
+        if (section) section.style.display = 'none';
+    }
+
+    // --- Reset Sección: Notas Doctrinales ---
+    var doctrinalesEl = document.querySelector('#adv-doctrinales');
+    if (doctrinalesEl) doctrinalesEl.innerHTML = '';
+
+    var referenciasEl = document.querySelector('#adv-referencias');
+    if (referenciasEl) referenciasEl.innerHTML = '';
+
+    // --- Reset Footer: Fuentes ---
+    var fuentesEl = document.querySelector('#adv-fuentes');
+    if (fuentesEl) fuentesEl.textContent = '';
+}
+
 function renderDetalle(adv) {
+    // Clear all fields before loading new data
+    clearDetalleFields();
+
     // --- Title ---
     var titleEl = document.querySelector('#adv-title');
     if (titleEl) titleEl.textContent = adv.nombre;

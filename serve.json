@@ -1,0 +1,32 @@
+{
+  "cleanUrls": false,
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/detalle",
+      "destination": "/detalle.html"
+    },
+    {
+      "source": "/explorador",
+      "destination": "/explorador.html"
+    },
+    {
+      "source": "/doctrina",
+      "destination": "/doctrina.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "**/*",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache"
+        }
+      ]
+    }
+  ]
+}
