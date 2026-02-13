@@ -844,7 +844,7 @@ function renderCard(adv) {
         ? '<div class="absolute top-3 left-3"><span class="bg-primary/90 text-white text-[10px] font-bold px-2 py-1 rounded shadow-sm backdrop-blur-sm">' + sigloLabel + '</span></div>'
         : '';
 
-    return '<a href="detalle?slug=' + adv.slug + '"' +
+    return '<a href="detalle.html?slug=' + adv.slug + '"' +
         ' class="advocation-card group bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden hover:shadow-2xl hover:shadow-primary/5 transition-all duration-300 flex flex-col no-underline text-inherit">' +
         '<div class="relative aspect-[4/5] overflow-hidden m-4 rounded-lg bg-slate-50 dark:bg-slate-800">' +
         imgHtml +
