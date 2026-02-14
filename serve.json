@@ -1,23 +1,6 @@
 {
-  "cleanUrls": false,
-  "rewrites": [
-    {
-      "source": "/",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/detalle",
-      "destination": "/detalle.html"
-    },
-    {
-      "source": "/explorador",
-      "destination": "/explorador.html"
-    },
-    {
-      "source": "/doctrina",
-      "destination": "/doctrina.html"
-    }
-  ],
+  "cleanUrls": true,
+  "trailingSlash": false,
   "headers": [
     {
       "source": "**/*",
