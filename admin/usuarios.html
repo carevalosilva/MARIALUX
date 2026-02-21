@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MARIALUX Admin — Usuarios</title>
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+
+<body>
+    <div class="admin-layout">
+        <aside class="sidebar"></aside>
+        <div class="main-content">
+            <header class="main-header">
+                <div>
+                    <h1>Trabajar con Usuarios</h1>
+                    <div class="breadcrumb">MARIALUX · <span>Usuarios</span></div>
+                </div>
+            </header>
+            <div class="page-content">
+                <div class="card filter-card">
+                    <div class="card-header" onclick="toggleFilters()">
+                        <h2>🔍 Filtros</h2>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="filter-body" id="filter-body"></div>
+                </div>
+                <div class="card">
+                    <div class="table-toolbar" id="table-toolbar"></div>
+                    <div style="overflow-x:auto">
+                        <table class="data-table">
+                            <thead id="table-head"></thead>
+                            <tbody id="table-body">
+                                <tr>
+                                    <td colspan="99">
+                                        <div class="loading-spinner">Cargando datos...</div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="pagination" id="pagination"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-overlay" id="modal-overlay"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-admin.js"></script>
+    <script src="js/sidebar.js"></script>
+    <script src="js/admin-crud.js"></script>
+    <script>
+        (async () => {
+            renderSidebar('usuarios');
+            const ok = await requireAuth();
+            if (!ok) return;
+
+            await initCRUD({
+                table: 'usuarios',
+                title: 'Usuarios',
+                singularTitle: 'Usuario',
+                pageSize: 10,
+                defaultSort: 'nombre',
+                defaultSortAsc: true,
+                searchColumns: ['nombre', 'apellido', 'email'],
+                columns: [
+                    { key: 'nombre', label: 'Nombre', sortable: true },
+                    { key: 'apellido', label: 'Apellido', sortable: true },
+                    { key: 'email', label: 'Email', sortable: true },
+                    { key: 'rol', label: 'Rol', type: 'badge', sortable: true, badgeMap: { 'admin': 'badge-info', 'editor': 'badge-neutral' } },
+                    { key: 'activo', label: 'Activo', type: 'boolean', sortable: true },
+                    { key: 'created_at', label: 'Fecha Creación', type: 'date', sortable: true }
+                ],
+                filters: [
+                    { key: 'nombre', label: 'Nombre', type: 'text', placeholder: 'Buscar...', searchable: true },
+                    { key: 'rol', label: 'Rol', type: 'select', options: ['admin', 'editor'] },
+                    { key: 'activo', label: 'Activo', type: 'boolean' }
+                ],
+                formFields: [
+                    { key: 'nombre', label: 'Nombre', type: 'text', required: true },
+                    { key: 'apellido', label: 'Apellido', type: 'text', required: true },
+                    { key: 'email', label: 'Email', type: 'email', required: true },
+                    {
+                        key: 'rol', label: 'Rol', type: 'select', options: [
+                            { value: 'admin', label: 'Administrador' },
+                            { value: 'editor', label: 'Editor' }
+                        ], required: true
+                    },
+                    { key: 'activo', label: 'Activo', type: 'checkbox', default: true },
+                    { key: 'avatar_url', label: 'URL Avatar', type: 'text' }
+                ]
+            });
+        })();
+    </script>
+</body>
+
+</html>

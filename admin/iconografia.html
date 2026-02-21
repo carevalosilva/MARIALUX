@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MARIALUX Admin — Iconografía</title>
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+
+<body>
+    <div class="admin-layout">
+        <aside class="sidebar"></aside>
+        <div class="main-content">
+            <header class="main-header">
+                <div>
+                    <h1>Trabajar con Iconografía</h1>
+                    <div class="breadcrumb">MARIALUX · <span>Iconografía</span></div>
+                </div>
+            </header>
+            <div class="page-content">
+                <div class="card filter-card">
+                    <div class="card-header" onclick="toggleFilters()">
+                        <h2>🔍 Filtros</h2>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="filter-body" id="filter-body"></div>
+                </div>
+                <div class="card">
+                    <div class="table-toolbar" id="table-toolbar"></div>
+                    <div style="overflow-x:auto">
+                        <table class="data-table">
+                            <thead id="table-head"></thead>
+                            <tbody id="table-body">
+                                <tr>
+                                    <td colspan="99">
+                                        <div class="loading-spinner">Cargando datos...</div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="pagination" id="pagination"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-overlay" id="modal-overlay"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-admin.js"></script>
+    <script src="js/sidebar.js"></script>
+    <script src="js/admin-crud.js"></script>
+    <script>
+        (async () => {
+            renderSidebar('iconografia');
+            const ok = await requireAuth();
+            if (!ok) return;
+
+            await initCRUD({
+                table: 'iconografia_items',
+                title: 'Iconografía Items',
+                singularTitle: 'Item de Iconografía',
+                pageSize: 10,
+                defaultSort: 'orden',
+                defaultSortAsc: true,
+                searchColumns: ['titulo', 'descripcion'],
+                foreignKeys: [
+                    { key: 'advocaciones', table: 'advocaciones', columns: 'id, nombre', orderBy: 'nombre' }
+                ],
+                columns: [
+                    { key: 'advocacion_id', label: 'Advocación', fkLookup: 'advocaciones' },
+                    { key: 'titulo', label: 'Título', sortable: true },
+                    { key: 'descripcion', label: 'Descripción', type: 'truncate' },
+                    { key: 'orden', label: 'Orden', sortable: true },
+                    { key: 'created_at', label: 'Fecha Creación', type: 'date', sortable: true }
+                ],
+                filters: [
+                    { key: 'advocacion_id', label: 'Advocación', type: 'select', fk: 'advocaciones' },
+                    { key: 'titulo', label: 'Título', type: 'text', placeholder: 'Buscar...', searchable: true }
+                ],
+                formFields: [
+                    { key: 'advocacion_id', label: 'Advocación', type: 'select', fk: 'advocaciones', required: true },
+                    { key: 'titulo', label: 'Título', type: 'text', required: true },
+                    { key: 'descripcion', label: 'Descripción', type: 'textarea', rows: 4, required: true },
+                    { key: 'orden', label: 'Orden', type: 'number', default: 0, help: 'Número de orden de aparición' }
+                ]
+            });
+        })();
+    </script>
+</body>
+
+</html>

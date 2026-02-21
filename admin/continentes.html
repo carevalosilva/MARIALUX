@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MARIALUX Admin — Continentes</title>
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+
+<body>
+    <div class="admin-layout">
+        <aside class="sidebar"></aside>
+        <div class="main-content">
+            <header class="main-header">
+                <div>
+                    <h1>Trabajar con Continentes</h1>
+                    <div class="breadcrumb">MARIALUX · <span>Continentes</span></div>
+                </div>
+            </header>
+
+            <div class="page-content">
+                <!-- Filters -->
+                <div class="card filter-card">
+                    <div class="card-header" onclick="toggleFilters()">
+                        <h2>🔍 Filtros</h2>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="filter-body" id="filter-body"></div>
+                </div>
+
+                <!-- Data Grid -->
+                <div class="card">
+                    <div class="table-toolbar" id="table-toolbar"></div>
+                    <div style="overflow-x:auto">
+                        <table class="data-table">
+                            <thead id="table-head"></thead>
+                            <tbody id="table-body">
+                                <tr>
+                                    <td colspan="99">
+                                        <div class="loading-spinner">Cargando datos...</div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="pagination" id="pagination"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modal-overlay"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-admin.js"></script>
+    <script src="js/sidebar.js"></script>
+    <script src="js/admin-crud.js"></script>
+    <script>
+        (async () => {
+            renderSidebar('continentes');
+            const ok = await requireAuth();
+            if (!ok) return;
+
+            await initCRUD({
+                table: 'continentes',
+                title: 'Continentes',
+                singularTitle: 'Continente',
+                pageSize: 10,
+                defaultSort: 'nombre',
+                defaultSortAsc: true,
+                searchColumns: ['nombre', 'slug'],
+                columns: [
+                    { key: 'nombre', label: 'Nombre', sortable: true },
+                    { key: 'slug', label: 'Slug', sortable: true },
+                    { key: 'created_at', label: 'Fecha Creación', type: 'date', sortable: true }
+                ],
+                filters: [
+                    { key: 'nombre', label: 'Nombre', type: 'text', placeholder: 'Buscar por nombre...', searchable: true },
+                    { key: 'slug', label: 'Slug', type: 'text', placeholder: 'Buscar por slug...' }
+                ],
+                formFields: [
+                    { key: 'nombre', label: 'Nombre', type: 'text', required: true },
+                    { key: 'slug', label: 'Slug', type: 'text', required: true, help: 'URL-friendly, ej: america' }
+                ]
+            });
+        })();
+    </script>
+</body>
+
+</html>

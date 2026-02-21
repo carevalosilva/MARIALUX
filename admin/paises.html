@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MARIALUX Admin — Países</title>
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+
+<body>
+    <div class="admin-layout">
+        <aside class="sidebar"></aside>
+        <div class="main-content">
+            <header class="main-header">
+                <div>
+                    <h1>Trabajar con Países</h1>
+                    <div class="breadcrumb">MARIALUX · <span>Países</span></div>
+                </div>
+            </header>
+            <div class="page-content">
+                <div class="card filter-card">
+                    <div class="card-header" onclick="toggleFilters()">
+                        <h2>🔍 Filtros</h2>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="filter-body" id="filter-body"></div>
+                </div>
+                <div class="card">
+                    <div class="table-toolbar" id="table-toolbar"></div>
+                    <div style="overflow-x:auto">
+                        <table class="data-table">
+                            <thead id="table-head"></thead>
+                            <tbody id="table-body">
+                                <tr>
+                                    <td colspan="99">
+                                        <div class="loading-spinner">Cargando datos...</div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="pagination" id="pagination"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-overlay" id="modal-overlay"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-admin.js"></script>
+    <script src="js/sidebar.js"></script>
+    <script src="js/admin-crud.js"></script>
+    <script>
+        (async () => {
+            renderSidebar('paises');
+            const ok = await requireAuth();
+            if (!ok) return;
+
+            await initCRUD({
+                table: 'paises',
+                title: 'Países',
+                singularTitle: 'País',
+                pageSize: 10,
+                defaultSort: 'nombre',
+                defaultSortAsc: true,
+                searchColumns: ['nombre', 'slug', 'codigo_iso'],
+                foreignKeys: [
+                    { key: 'continentes', table: 'continentes', columns: 'id, nombre' }
+                ],
+                columns: [
+                    { key: 'continente_id', label: 'Continente', fkLookup: 'continentes' },
+                    { key: 'nombre', label: 'Nombre', sortable: true },
+                    { key: 'codigo_iso', label: 'Código ISO', sortable: true },
+                    { key: 'slug', label: 'Slug', sortable: true },
+                    { key: 'created_at', label: 'Fecha Creación', type: 'date', sortable: true }
+                ],
+                filters: [
+                    { key: 'continente_id', label: 'Continente', type: 'select', fk: 'continentes' },
+                    { key: 'nombre', label: 'Nombre', type: 'text', placeholder: 'Buscar...', searchable: true },
+                    { key: 'codigo_iso', label: 'Código ISO', type: 'text', placeholder: 'Ej: MX' }
+                ],
+                formFields: [
+                    { key: 'continente_id', label: 'Continente', type: 'select', fk: 'continentes', required: true },
+                    { key: 'nombre', label: 'Nombre', type: 'text', required: true },
+                    { key: 'codigo_iso', label: 'Código ISO', type: 'text', help: '2 letras, ej: AR' },
+                    { key: 'slug', label: 'Slug', type: 'text', required: true, help: 'URL-friendly, ej: argentina' }
+                ]
+            });
+        })();
+    </script>
+</body>
+
+</html>

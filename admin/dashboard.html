@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MARIALUX Admin — Dashboard</title>
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+
+<body>
+    <div class="admin-layout">
+        <aside class="sidebar"></aside>
+
+        <div class="main-content">
+            <header class="main-header">
+                <div>
+                    <h1>Panel de Administración</h1>
+                    <div class="breadcrumb">MARIALUX · <span>Dashboard</span></div>
+                </div>
+                <div class="header-actions">
+                    <span id="current-date" style="color:var(--text-secondary);font-size:13px"></span>
+                </div>
+            </header>
+
+            <div class="page-content">
+                <!-- Stats -->
+                <div class="stats-grid" id="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon blue">🌐</div>
+                        <div>
+                            <div class="stat-value" id="stat-continentes">—</div>
+                            <div class="stat-label">Continentes</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon green">🏳️</div>
+                        <div>
+                            <div class="stat-value" id="stat-paises">—</div>
+                            <div class="stat-label">Países</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon purple">⭐</div>
+                        <div>
+                            <div class="stat-value" id="stat-advocaciones">—</div>
+                            <div class="stat-label">Advocaciones</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon orange">🖼️</div>
+                        <div>
+                            <div class="stat-value" id="stat-iconografia">—</div>
+                            <div class="stat-label">Iconografía</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon pink">📖</div>
+                        <div>
+                            <div class="stat-value" id="stat-referencias">—</div>
+                            <div class="stat-label">Referencias</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon teal">👤</div>
+                        <div>
+                            <div class="stat-value" id="stat-usuarios">—</div>
+                            <div class="stat-label">Usuarios</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Two-column section -->
+                <div class="dashboard-grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Advocaciones Recientes</h2>
+                        </div>
+                        <div class="card-body">
+                            <ul class="recent-list" id="recent-advocaciones">
+                                <li>Cargando...</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Accesos Rápidos</h2>
+                        </div>
+                        <div class="card-body">
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+                                <a href="/admin/advocaciones" class="btn btn-primary" style="justify-content:center">⭐
+                                    Advocaciones</a>
+                                <a href="/admin/paises" class="btn btn-outline" style="justify-content:center">🏳️
+                                    Países</a>
+                                <a href="/admin/iconografia" class="btn btn-outline" style="justify-content:center">🖼️
+                                    Iconografía</a>
+                                <a href="/admin/referencias" class="btn btn-outline" style="justify-content:center">📖
+                                    Referencias</a>
+                                <a href="/admin/continentes" class="btn btn-outline" style="justify-content:center">🌐
+                                    Continentes</a>
+                                <a href="/admin/usuarios" class="btn btn-outline" style="justify-content:center">👤
+                                    Usuarios</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-admin.js"></script>
+    <script src="js/sidebar.js"></script>
+    <script>
+        (async () => {
+            renderSidebar('dashboard');
+            const ok = await requireAuth();
+            if (!ok) return;
+
+            // Date
+            document.getElementById('current-date').textContent =
+                new Date().toLocaleDateString('es-CL', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+            // Stats
+            const tables = [
+                { id: 'stat-continentes', table: 'continentes' },
+                { id: 'stat-paises', table: 'paises' },
+                { id: 'stat-advocaciones', table: 'advocaciones' },
+                { id: 'stat-iconografia', table: 'iconografia_items' },
+                { id: 'stat-referencias', table: 'referencias_doctrinales' },
+                { id: 'stat-usuarios', table: 'usuarios' }
+            ];
+
+            for (const t of tables) {
+                try {
+                    const count = await sbCount(t.table);
+                    document.getElementById(t.id).textContent = count;
+                } catch (e) {
+                    document.getElementById(t.id).textContent = '?';
+                }
+            }
+
+            // Recent advocaciones
+            try {
+                const sb = getSupabase();
+                const { data } = await sb.from('advocaciones')
+                    .select('nombre, slug, created_at, paises(nombre)')
+                    .order('created_at', { ascending: false })
+                    .limit(6);
+
+                const list = document.getElementById('recent-advocaciones');
+                if (data && data.length > 0) {
+                    list.innerHTML = data.map(a => {
+                        const pais = a.paises ? a.paises.nombre : '—';
+                        const fecha = new Date(a.created_at).toLocaleDateString('es-CL');
+                        return '<li><span class="item-name">' + a.nombre + '</span><span class="item-meta">' + pais + ' · ' + fecha + '</span></li>';
+                    }).join('');
+                } else {
+                    list.innerHTML = '<li>No hay advocaciones aún.</li>';
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        })();
+    </script>
+</body>
+
+</html>
