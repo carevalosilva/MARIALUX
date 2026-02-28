@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>MARIALUX Admin Login</title>
+    <title id="page-title">Admin Login</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&display=swap"
         rel="stylesheet" />
@@ -91,8 +91,9 @@
             <div class="pt-10 pb-6 flex flex-col items-center gap-4">
                 <div class="flex items-center gap-3 text-primary">
                     <div class="size-10 bg-primary/10 rounded-lg flex items-center justify-center text-xl">✝</div>
-                    <h1 class="text-slate-900 dark:text-slate-100 text-2xl font-bold tracking-tight">MARIALUX <span
-                            class="text-primary/70 font-medium">Admin</span></h1>
+                    <h1 class="text-slate-900 dark:text-slate-100 text-2xl font-bold tracking-tight"><span
+                            id="login-site-name"></span> <span class="text-primary/70 font-medium">Admin</span>
+                    </h1>
                 </div>
                 <div class="text-center px-8">
                     <h2 class="text-slate-900 dark:text-slate-100 text-xl font-bold leading-tight">Iniciar Sesión</h2>
@@ -161,7 +162,7 @@
     <!-- Footer -->
     <footer class="relative z-10 py-6 text-center">
         <p class="text-slate-400 dark:text-slate-500 text-xs tracking-wide">
-            © 2026 MARIALUX Admin • Todos los derechos reservados
+            <span id="login-copyright"></span>
         </p>
     </footer>
 
@@ -237,6 +238,24 @@
 
             return false;
         }
+    </script>
+    <script>
+        // Load dynamic site name
+        (async function () {
+            try {
+                const { data } = await _sb.from('parametros_sitio').select('clave, valor');
+                if (!data) return;
+                const params = {};
+                data.forEach(r => { params[r.clave] = r.valor; });
+                const name = params.nombre_sitio || 'MARIALUX';
+                const el = document.getElementById('login-site-name');
+                if (el) el.textContent = name;
+                const title = document.getElementById('page-title');
+                if (title) title.textContent = name + ' Admin Login';
+                const copy = document.getElementById('login-copyright');
+                if (copy && params.copyright_texto) copy.textContent = params.copyright_texto;
+            } catch (e) { /* keep defaults */ }
+        })();
     </script>
 </body>
 

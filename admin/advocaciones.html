@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MARIALUX Admin — Advocaciones</title>
+    <title>Admin — Advocaciones</title>
     <link rel="stylesheet" href="css/admin.css">
 </head>
 
@@ -15,7 +15,7 @@
             <header class="main-header">
                 <div>
                     <h1>Trabajar con Advocaciones</h1>
-                    <div class="breadcrumb">MARIALUX · <span>Advocaciones</span></div>
+                    <div class="breadcrumb"><span class="breadcrumb-site"></span> · <span>Advocaciones</span></div>
                 </div>
             </header>
             <div class="page-content">
@@ -101,7 +101,7 @@
                     { key: 'festividad', label: 'Festividad', type: 'text', help: 'Ej: 12 de diciembre' },
                     { key: 'tipo_origen', label: 'Tipo Origen', type: 'select', options: TIPOS_ORIGEN, required: true },
                     { key: 'estatus_eclesiastico', label: 'Estatus Eclesiástico', type: 'select', options: ESTATUS, required: true },
-                    { key: 'imagen_url', label: 'URL de Imagen', type: 'text' },
+                    { key: 'imagen_url', label: 'Imagen', type: 'file_upload', nameField: 'slug' },
                     { key: 'imagen_caption', label: 'Caption de Imagen', type: 'text' },
                     { key: 'historia', label: 'Historia', type: 'textarea', rows: 4 },
                     { key: 'significado_espiritual', label: 'Significado Espiritual', type: 'textarea', rows: 3 },

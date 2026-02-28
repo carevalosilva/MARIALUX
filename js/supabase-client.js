@@ -201,3 +201,33 @@ async function fetchEstatusCounts() {
         return {};
     }
 }
+
+// ============================================================
+// DATA ACCESS: Parámetros del Sitio
+// ============================================================
+
+/**
+ * Obtener todos los parámetros del sitio como objeto clave-valor
+ */
+async function fetchParametrosSitio() {
+    try {
+        const sb = requireSupabase();
+        const { data, error } = await sb
+            .from('parametros_sitio')
+            .select('clave, valor');
+
+        if (error) {
+            console.error('[MARIALUX] Error fetching parámetros:', error.message);
+            return {};
+        }
+
+        var params = {};
+        (data || []).forEach(function (row) {
+            params[row.clave] = row.valor;
+        });
+        return params;
+    } catch (err) {
+        console.error('[MARIALUX] fetchParametrosSitio exception:', err.message);
+        return {};
+    }
+}

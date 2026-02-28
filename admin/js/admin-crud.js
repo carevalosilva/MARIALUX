@@ -380,7 +380,7 @@ function openCreateModal() {
 }
 
 function openEditModal(id) {
-    const row = _crudState.data.find(r => r.id === id);
+    const row = _crudState.data.find(r => String(r.id) === String(id));
     if (!row) return;
     _crudState.editingId = id;
     renderFormModal('Editar ' + (_crudConfig.singularTitle || 'Registro'), row);
@@ -419,6 +419,19 @@ function renderFormModal(title, data) {
             bodyHtml += '<textarea id="field-' + f.key + '" rows="' + (f.rows || 3) + '"' + (f.required ? ' required' : '') + '>' + escapeHtml(String(val)) + '</textarea>';
         } else if (f.type === 'checkbox') {
             bodyHtml += '<input type="checkbox" id="field-' + f.key + '"' + (val ? ' checked' : '') + ' style="width:auto;margin-top:6px">';
+        } else if (f.type === 'file_upload') {
+            bodyHtml += '<div class="file-upload-group">';
+            bodyHtml += '<div style="display:flex;gap:8px;align-items:center">';
+            bodyHtml += '<input type="text" id="field-' + f.key + '" value="' + escapeHtml(String(val)) + '" readonly style="flex:1;background:var(--bg-secondary);cursor:default">';
+            bodyHtml += '<button type="button" class="btn btn-outline btn-sm" onclick="triggerFileUpload(\'' + f.key + '\', \'' + (f.nameField || 'slug') + '\')" style="white-space:nowrap">📷 Subir</button>';
+            bodyHtml += '</div>';
+            bodyHtml += '<input type="file" id="file-input-' + f.key + '" accept="image/*" style="display:none" onchange="handleFileUpload(\'' + f.key + '\', \'' + (f.nameField || 'slug') + '\')">';
+            if (val) {
+                bodyHtml += '<div id="file-preview-' + f.key + '" style="margin-top:8px"><img src="' + escapeHtml(String(val)) + '" style="max-height:120px;border-radius:8px;border:1px solid var(--border-color)" onerror="this.style.display=\'none\'"></div>';
+            } else {
+                bodyHtml += '<div id="file-preview-' + f.key + '" style="margin-top:8px"></div>';
+            }
+            bodyHtml += '</div>';
         } else if (f.type === 'number') {
             bodyHtml += '<input type="number" id="field-' + f.key + '" value="' + escapeHtml(String(val)) + '"' + (f.required ? ' required' : '') + '>';
         } else {
@@ -494,8 +507,8 @@ async function saveRecord() {
 // ============================================================
 
 function confirmDelete(id) {
-    const row = _crudState.data.find(r => r.id === id);
-    const name = row ? (row.nombre || row.titulo || row.email || row.id) : id;
+    const row = _crudState.data.find(r => String(r.id) === String(id));
+    const name = row ? (row.nombre || row.clave || row.titulo || row.email || row.id) : id;
 
     const overlay = document.getElementById('modal-overlay');
     if (!overlay) return;
@@ -568,4 +581,72 @@ function exportCSV() {
 function toggleFilters() {
     const card = document.querySelector('.filter-card');
     if (card) card.classList.toggle('collapsed');
+}
+
+// ============================================================
+// FILE UPLOAD (for file_upload field type)
+// ============================================================
+
+function triggerFileUpload(fieldKey, nameField) {
+    const slugEl = document.getElementById('field-' + nameField);
+    if (!slugEl || !slugEl.value.trim()) {
+        showToast('Primero complete el campo "' + nameField + '" antes de subir una imagen', 'error');
+        return;
+    }
+    const fileInput = document.getElementById('file-input-' + fieldKey);
+    if (fileInput) fileInput.click();
+}
+
+async function handleFileUpload(fieldKey, nameField) {
+    const fileInput = document.getElementById('file-input-' + fieldKey);
+    const field = document.getElementById('field-' + fieldKey);
+    const slugEl = document.getElementById('field-' + nameField);
+
+    if (!fileInput || !fileInput.files[0] || !slugEl) return;
+
+    const file = fileInput.files[0];
+    const slug = slugEl.value.trim();
+
+    if (!slug) {
+        showToast('El slug es requerido para nombrar el archivo', 'error');
+        return;
+    }
+
+    // Show uploading state
+    if (field) field.value = 'Subiendo...';
+
+    try {
+        const formData = new FormData();
+        formData.append('imagen', file);
+        formData.append('slug', slug);
+
+        const response = await fetch('/api/upload-image', {
+            method: 'POST',
+            body: formData
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.error || 'Error al subir imagen');
+        }
+
+        // Update the field with the relative path
+        if (field) field.value = result.path;
+
+        // Update preview
+        const preview = document.getElementById('file-preview-' + fieldKey);
+        if (preview) {
+            preview.innerHTML = '<img src="/' + result.path + '?t=' + Date.now() + '" style="max-height:120px;border-radius:8px;border:1px solid var(--border-color)">';
+        }
+
+        showToast('Imagen subida correctamente: ' + result.path, 'success');
+    } catch (err) {
+        console.error('[Upload] Error:', err);
+        if (field) field.value = '';
+        showToast('Error al subir imagen: ' + err.message, 'error');
+    }
+
+    // Reset file input
+    fileInput.value = '';
 }

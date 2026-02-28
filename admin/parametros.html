@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin — Países</title>
+    <title>Admin — Parámetros del Sitio</title>
     <link rel="stylesheet" href="css/admin.css">
 </head>
 
@@ -14,8 +14,8 @@
         <div class="main-content">
             <header class="main-header">
                 <div>
-                    <h1>Trabajar con Países</h1>
-                    <div class="breadcrumb"><span class="breadcrumb-site"></span> · <span>Países</span></div>
+                    <h1>Parámetros del Sitio</h1>
+                    <div class="breadcrumb"><span class="breadcrumb-site"></span> · <span>Parámetros</span></div>
                 </div>
             </header>
             <div class="page-content">
@@ -53,38 +53,32 @@
     <script src="js/admin-crud.js"></script>
     <script>
         (async () => {
-            renderSidebar('paises');
+            renderSidebar('parametros');
             const ok = await requireAuth();
             if (!ok) return;
 
             await initCRUD({
-                table: 'paises',
-                title: 'Países',
-                singularTitle: 'País',
-                pageSize: 10,
-                defaultSort: 'nombre',
+                table: 'parametros_sitio',
+                title: 'Parámetros del Sitio',
+                singularTitle: 'Parámetro',
+                pageSize: 20,
+                defaultSort: 'clave',
                 defaultSortAsc: true,
-                searchColumns: ['nombre', 'slug', 'codigo_iso'],
-                foreignKeys: [
-                    { key: 'continentes', table: 'continentes', columns: 'id, nombre' }
-                ],
+                searchColumns: ['clave', 'valor', 'descripcion'],
                 columns: [
-                    { key: 'continente_id', label: 'Continente', fkLookup: 'continentes' },
-                    { key: 'nombre', label: 'Nombre', sortable: true },
-                    { key: 'codigo_iso', label: 'Código ISO', sortable: true },
-                    { key: 'slug', label: 'Slug', sortable: true },
-                    { key: 'created_at', label: 'Fecha Creación', type: 'date', sortable: true }
+                    { key: 'clave', label: 'Clave', sortable: true },
+                    { key: 'valor', label: 'Valor', type: 'truncate', sortable: true },
+                    { key: 'descripcion', label: 'Descripción', type: 'truncate' },
+                    { key: 'updated_at', label: 'Última Actualización', type: 'date', sortable: true }
                 ],
                 filters: [
-                    { key: 'continente_id', label: 'Continente', type: 'select', fk: 'continentes' },
-                    { key: 'nombre', label: 'Nombre', type: 'text', placeholder: 'Buscar...', searchable: true },
-                    { key: 'codigo_iso', label: 'Código ISO', type: 'text', placeholder: 'Ej: MX' }
+                    { key: 'clave', label: 'Clave', type: 'text', placeholder: 'Buscar clave...', searchable: true },
+                    { key: 'valor', label: 'Valor', type: 'text', placeholder: 'Buscar valor...', searchable: true }
                 ],
                 formFields: [
-                    { key: 'continente_id', label: 'Continente', type: 'select', fk: 'continentes', required: true },
-                    { key: 'nombre', label: 'Nombre', type: 'text', required: true },
-                    { key: 'codigo_iso', label: 'Código ISO', type: 'text', help: '2 letras, ej: AR' },
-                    { key: 'slug', label: 'Slug', type: 'text', required: true, help: 'URL-friendly, ej: argentina' }
+                    { key: 'clave', label: 'Clave', type: 'text', required: true, help: 'Identificador único, ej: nombre_sitio' },
+                    { key: 'valor', label: 'Valor', type: 'textarea', rows: 3, required: true, help: 'Valor del parámetro' },
+                    { key: 'descripcion', label: 'Descripción', type: 'textarea', rows: 2, help: 'Descripción del uso de este parámetro' }
                 ]
             });
         })();

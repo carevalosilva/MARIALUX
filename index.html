@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>Inicio | MARIALUX</title>
+    <title id="page-title">Inicio | MARIALUX</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link
         href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600&amp;family=Playfair+Display:ital,wght@0,400;0,700;1,400&amp;display=swap"
@@ -59,15 +59,14 @@
             <div class="flex items-center gap-2">
                 <span class="material-icons-outlined text-primary text-3xl">church</span>
                 <span
-                    class="serif-font text-xl font-bold tracking-tight text-slate-900 dark:text-white uppercase tracking-widest">MARIA<span
-                        class="text-primary">LUX</span></span>
+                    class="serif-font text-xl font-bold tracking-tight text-slate-900 dark:text-white uppercase tracking-widest"><span
+                        id="nav-nombre-parte1">MARIA</span><span class="text-primary"
+                        id="nav-nombre-parte2">LUX</span></span>
             </div>
             <div class="hidden md:flex items-center space-x-10 text-sm font-medium tracking-wide uppercase">
                 <a class="text-primary border-b-2 border-primary pb-1" href="index.html">Inicio</a>
                 <a class="hover:text-primary transition-colors pb-1 border-b-2 border-transparent"
                     href="explorador.html">Explorador</a>
-                <a class="hover:text-primary transition-colors pb-1 border-b-2 border-transparent"
-                    href="doctrina.html">Doctrina</a>
 
             </div>
             <div class="flex items-center">
@@ -200,10 +199,12 @@
                 <div class="col-span-1 md:col-span-2">
                     <div class="flex items-center gap-2 mb-6">
                         <span class="material-icons-outlined text-primary text-2xl">church</span>
-                        <span class="serif-font text-lg font-bold tracking-tight uppercase">MARIA<span
-                                class="text-primary">LUX</span></span>
+                        <span class="serif-font text-lg font-bold tracking-tight uppercase"><span
+                                id="footer-nombre-parte1">MARIA</span><span class="text-primary"
+                                id="footer-nombre-parte2">LUX</span></span>
                     </div>
-                    <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed max-w-sm">
+                    <p id="footer-descripcion"
+                        class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed max-w-sm">
                         Un espacio educativo dedicado a la difusión y el estudio de las diversas expresiones de devoción
                         a la Madre de Dios en todo el mundo.
                     </p>
@@ -212,7 +213,6 @@
                     <h4 class="text-xs font-bold uppercase tracking-widest mb-6">Explorar</h4>
                     <ul class="space-y-4 text-sm text-slate-600 dark:text-slate-400">
                         <li><a class="hover:text-primary transition-colors" href="explorador.html">Explorador</a></li>
-                        <li><a class="hover:text-primary transition-colors" href="doctrina.html">Doctrina</a></li>
 
                         <li><a class="hover:text-primary transition-colors" href="index.html">Inicio</a></li>
                     </ul>
@@ -228,7 +228,7 @@
                 </div>
             </div>
             <div class="pt-8 border-t border-primary/5 flex flex-col md:flex-row justify-between items-center gap-6">
-                <p class="text-xs text-slate-400">
+                <p id="footer-copyright" class="text-xs text-slate-400">
                     © 2024 Advocaciones Marianas. El contenido de este portal tiene carácter educativo y divulgativo.
                 </p>
                 <div class="flex items-center gap-4">
@@ -245,7 +245,37 @@
         </div>
     </footer>
 
+    <!-- Supabase JS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <!-- MARIALUX Scripts -->
+    <script src="js/supabase-client.js"></script>
     <script src="js/script.js"></script>
+    <script>
+            (async function () {
+                try {
+                    const params = await fetchParametrosSitio();
+                    if (params.nombre_sitio_parte1) {
+                        document.getElementById('nav-nombre-parte1').textContent = params.nombre_sitio_parte1;
+                        document.getElementById('footer-nombre-parte1').textContent = params.nombre_sitio_parte1;
+                    }
+                    if (params.nombre_sitio_parte2) {
+                        document.getElementById('nav-nombre-parte2').textContent = params.nombre_sitio_parte2;
+                        document.getElementById('footer-nombre-parte2').textContent = params.nombre_sitio_parte2;
+                    }
+                    if (params.nombre_sitio) {
+                        document.getElementById('page-title').textContent = 'Inicio | ' + params.nombre_sitio;
+                    }
+                    if (params.descripcion_sitio) {
+                        document.getElementById('footer-descripcion').textContent = params.descripcion_sitio;
+                    }
+                    if (params.copyright_texto) {
+                        document.getElementById('footer-copyright').textContent = params.copyright_texto;
+                    }
+                } catch (e) {
+                    console.warn('[MARIALUX] No se pudieron cargar parámetros del sitio:', e.message);
+                }
+            })();
+    </script>
 </body>
 
 </html>
