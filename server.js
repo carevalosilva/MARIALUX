@@ -373,6 +373,11 @@ app.post('/api/upload-image', upload.single('imagen'), async (req, res) => {
 app.use('/virgenes', express.static(VIRGENES_DIR));
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
 
+// Serve favicon
+app.get('/favicon.svg', (req, res) => {
+    res.sendFile(path.join(__dirname, 'favicon.svg'));
+});
+
 // In production, serve the Vite build
 const distPath = path.join(__dirname, 'dist');
 if (fs.existsSync(distPath)) {
