@@ -316,6 +316,51 @@ app.get('/api/admin/:table/all', async (req, res) => {
     res.json(data || []);
 });
 
+// POST /api/admin/usuarios (Special handler for users)
+app.post('/api/admin/usuarios', async (req, res) => {
+    const user = await getAuthClient(req);
+    if (!user) return res.status(401).json({ error: 'No autenticado' });
+
+    const { email, nombre, apellido, rol, password = 'PasswordTemporal123!' } = req.body;
+
+    if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
+        return res.status(500).json({
+            error: 'Para crear usuarios desde el panel, necesitas configurar SUPABASE_SERVICE_ROLE_KEY en el archivo .env con la clave secreta (service_role) de Supabase.'
+        });
+    }
+
+    const adminSupabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
+
+    try {
+        // 1. Create user in Auth
+        const { data: authData, error: authError } = await adminSupabase.auth.admin.createUser({
+            email,
+            password,
+            email_confirm: true
+        });
+
+        if (authError) return res.status(500).json({ error: authError.message });
+
+        // 2. Insert into public.usuarios table
+        const { data, error } = await adminSupabase.from('usuarios').insert({
+            id: authData.user.id,
+            email,
+            nombre,
+            apellido,
+            rol
+        }).select().single();
+
+        if (error) {
+            await adminSupabase.auth.admin.deleteUser(authData.user.id);
+            return res.status(500).json({ error: error.message });
+        }
+
+        res.json(data);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 // POST /api/admin/:table
 app.post('/api/admin/:table', async (req, res) => {
     const user = await getAuthClient(req);

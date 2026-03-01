@@ -70,10 +70,11 @@ const FIELD_CONFIGS = {
         ],
     },
     usuarios: {
-        columns: ['nombre', 'email', 'rol'],
-        searchColumns: 'nombre,email',
+        columns: ['nombre', 'apellido', 'email', 'rol'],
+        searchColumns: 'nombre,apellido,email',
         formFields: [
             { key: 'nombre', label: 'Nombre', required: true },
+            { key: 'apellido', label: 'Apellido', required: true },
             { key: 'email', label: 'Email', required: true },
             { key: 'rol', label: 'Rol', type: 'select', options: ['admin', 'editor', 'viewer'], required: true },
         ],
