@@ -42,9 +42,75 @@ function renderSidebar(activePage) {
     const sidebar = document.querySelector('.sidebar');
     if (sidebar) sidebar.innerHTML = html;
 
+    // Inject hamburger button into header
+    injectSidebarToggle();
+
+    // Inject overlay for mobile sidebar
+    injectSidebarOverlay();
+
+    // Close sidebar when clicking navigation links (mobile)
+    if (sidebar) {
+        sidebar.querySelectorAll('.sidebar-nav a').forEach(link => {
+            link.addEventListener('click', () => {
+                closeSidebar();
+            });
+        });
+    }
+
     // Load dynamic site name
     loadSiteNameInAdmin();
 }
+
+// ============================================================
+// Mobile sidebar toggle
+// ============================================================
+
+function injectSidebarToggle() {
+    const header = document.querySelector('.main-header');
+    if (!header || header.querySelector('.sidebar-toggle')) return;
+    const btn = document.createElement('button');
+    btn.className = 'sidebar-toggle';
+    btn.setAttribute('aria-label', 'Abrir menú');
+    btn.innerHTML = '☰';
+    btn.onclick = toggleSidebar;
+    header.insertBefore(btn, header.firstChild);
+}
+
+function injectSidebarOverlay() {
+    if (document.querySelector('.sidebar-overlay')) return;
+    const overlay = document.createElement('div');
+    overlay.className = 'sidebar-overlay';
+    overlay.onclick = closeSidebar;
+    document.body.appendChild(overlay);
+}
+
+function toggleSidebar() {
+    const sidebar = document.querySelector('.sidebar');
+    const overlay = document.querySelector('.sidebar-overlay');
+    if (!sidebar) return;
+    const isOpen = sidebar.classList.toggle('open');
+    if (overlay) {
+        if (isOpen) {
+            overlay.classList.add('active');
+        } else {
+            overlay.classList.remove('active');
+        }
+    }
+}
+
+function closeSidebar() {
+    const sidebar = document.querySelector('.sidebar');
+    const overlay = document.querySelector('.sidebar-overlay');
+    if (sidebar) sidebar.classList.remove('open');
+    if (overlay) overlay.classList.remove('active');
+}
+
+// Close sidebar on resize to desktop
+window.addEventListener('resize', () => {
+    if (window.innerWidth > 1024) {
+        closeSidebar();
+    }
+});
 
 async function loadSiteNameInAdmin() {
     try {
