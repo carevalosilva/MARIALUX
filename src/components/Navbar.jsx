@@ -1,16 +1,28 @@
-import { Link, useLocation } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useSiteParams } from '../context/SiteParamsContext';
 
 export default function Navbar() {
     const params = useSiteParams();
     const loc = useLocation();
+    const navigate = useNavigate();
     const current = loc.pathname;
+
+    const [searchTerm, setSearchTerm] = useState('');
 
     const p1 = params.nombre_sitio_parte1 || 'MARIA';
     const p2 = params.nombre_sitio_parte2 || 'LUX';
 
     const linkClass = (path) =>
         `transition-colors pb-1 border-b-2 ${current === path ? 'text-primary border-primary' : 'border-transparent hover:text-primary'}`;
+
+    const handleSearch = (e) => {
+        e.preventDefault();
+        if (searchTerm.trim()) {
+            navigate('/explorador?search=' + encodeURIComponent(searchTerm.trim()));
+            setSearchTerm('');
+        }
+    };
 
     return (
         <nav className="fixed top-0 w-full z-50 bg-white/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-primary/10">
@@ -26,13 +38,15 @@ export default function Navbar() {
                     <Link className={linkClass('/explorador')} to="/explorador">Explorador</Link>
                 </div>
                 <div className="flex items-center">
-                    <div className="relative group">
+                    <form onSubmit={handleSearch} className="relative group">
                         <span className="material-icons-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors">search</span>
                         <input
                             className="pl-10 pr-4 py-2 bg-slate-50 dark:bg-slate-800 border-transparent focus:border-primary focus:ring-0 rounded-full text-sm w-48 transition-all focus:w-64"
                             placeholder="Buscar advocación..." type="text"
+                            value={searchTerm}
+                            onChange={e => setSearchTerm(e.target.value)}
                         />
-                    </div>
+                    </form>
                 </div>
             </div>
         </nav>

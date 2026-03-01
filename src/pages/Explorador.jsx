@@ -36,6 +36,14 @@ export default function Explorador() {
         fetchEstatusCounts().then(setEstatusCounts).catch(() => { });
     }, []);
 
+    // Listen to URL search param changes (e.g. from Navbar search)
+    useEffect(() => {
+        const querySearch = searchParams.get('search');
+        if (querySearch !== null && querySearch !== filters.search) {
+            setFilters(prev => ({ ...prev, search: querySearch, page: 1 }));
+        }
+    }, [searchParams]);
+
     const load = useCallback(async () => {
         setLoading(true);
         try {
