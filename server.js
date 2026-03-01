@@ -245,6 +245,45 @@ app.get('/api/auth/profile', async (req, res) => {
     res.json(data || { id: user.id, nombre: user.email.split('@')[0], email: user.email, rol: 'admin' });
 });
 
+app.post('/api/auth/change-password', async (req, res) => {
+    const user = await getAuthClient(req);
+    if (!user) return res.status(401).json({ error: 'No autenticado' });
+
+    const { currentPassword, newPassword } = req.body;
+    if (!currentPassword || !newPassword) {
+        return res.status(400).json({ error: 'Faltan datos requeridos (contraseña actual y nueva)' });
+    }
+
+    // 1. Verify current password by attempting to sign in
+    const { error: signInError } = await supabase.auth.signInWithPassword({
+        email: user.email,
+        password: currentPassword
+    });
+
+    if (signInError) {
+        return res.status(400).json({ error: 'La contraseña actual es incorrecta' });
+    }
+
+    if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
+        return res.status(500).json({
+            error: 'Servidor no configurado para cambio de contraseñas (falta SERVICE_ROLE_KEY)'
+        });
+    }
+
+    const adminSupabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
+
+    // 2. Update password
+    const { error: updateError } = await adminSupabase.auth.admin.updateUserById(user.id, {
+        password: newPassword
+    });
+
+    if (updateError) {
+        return res.status(500).json({ error: updateError.message });
+    }
+
+    res.json({ success: true, message: 'Contraseña actualizada correctamente' });
+});
+
 // ============================================================
 // ADMIN CRUD ENDPOINTS
 // ============================================================

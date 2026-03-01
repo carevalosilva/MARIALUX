@@ -51,6 +51,12 @@ export function logout() {
 export function getProfile() {
     return request('/auth/profile');
 }
+export function changePassword(currentPassword, newPassword) {
+    return request('/auth/change-password', {
+        method: 'POST',
+        body: { currentPassword, newPassword }
+    });
+}
 
 // ── Admin CRUD ──────────────────────────────────────────────
 export const adminList = (table, params) => {

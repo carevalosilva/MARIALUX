@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { getProfile, logout } from '../api';
+import { getProfile, logout, changePassword } from '../api';
 import { useSiteParams } from '../context/SiteParamsContext';
 
 const NAV_ITEMS = [
@@ -34,6 +34,13 @@ export default function AdminLayout({ children, title, section }) {
     const [checking, setChecking] = useState(true);
     const siteName = params.nombre_sitio || 'MARIALUX';
 
+    // Password modal state
+    const [showPasswordModal, setShowPasswordModal] = useState(false);
+    const [passForm, setPassForm] = useState({ current: '', new1: '', new2: '' });
+    const [passLoading, setPassLoading] = useState(false);
+    const [passError, setPassError] = useState('');
+    const [passSuccess, setPassSuccess] = useState(false);
+
     useEffect(() => {
         const token = sessionStorage.getItem('auth_token');
         if (!token) { nav('/admin'); return; }
@@ -49,6 +56,35 @@ export default function AdminLayout({ children, title, section }) {
     const handleLogout = async () => {
         await logout();
         nav('/admin');
+    };
+
+    const handlePasswordSubmit = async (e) => {
+        e.preventDefault();
+        setPassError('');
+        setPassSuccess(false);
+
+        if (passForm.new1 !== passForm.new2) {
+            setPassError('Las contraseñas nuevas no coinciden');
+            return;
+        }
+        if (passForm.new1.length < 6) {
+            setPassError('La nueva contraseña debe tener al menos 6 caracteres');
+            return;
+        }
+
+        setPassLoading(true);
+        try {
+            await changePassword(passForm.current, passForm.new1);
+            setPassSuccess(true);
+            setPassForm({ current: '', new1: '', new2: '' });
+            setTimeout(() => {
+                setShowPasswordModal(false);
+                setPassSuccess(false);
+            }, 2000);
+        } catch (err) {
+            setPassError(err.message || 'Error al cambiar contraseña');
+        }
+        setPassLoading(false);
     };
 
     if (checking) return <div className="min-h-screen flex items-center justify-center text-slate-400">Verificando sesión...</div>;
@@ -84,9 +120,14 @@ export default function AdminLayout({ children, title, section }) {
                         <div className="user-name">{user?.nombre || user?.email}</div>
                         <div className="user-role">{user?.rol || 'admin'}</div>
                     </div>
-                    <button className="btn-logout" onClick={handleLogout} title="Cerrar sesión">
-                        <span className="material-icons-outlined" style={{ fontSize: 18 }}>logout</span>
-                    </button>
+                    <div style={{ display: 'flex', gap: '4px' }}>
+                        <button className="btn-logout" onClick={() => setShowPasswordModal(true)} title="Cambiar contraseña" style={{ padding: '8px', color: '#64748b' }}>
+                            <span className="material-icons-outlined" style={{ fontSize: 18 }}>vpn_key</span>
+                        </button>
+                        <button className="btn-logout" onClick={handleLogout} title="Cerrar sesión" style={{ padding: '8px' }}>
+                            <span className="material-icons-outlined" style={{ fontSize: 18 }}>logout</span>
+                        </button>
+                    </div>
                 </div>
             </aside>
 
@@ -104,6 +145,62 @@ export default function AdminLayout({ children, title, section }) {
                     {children}
                 </div>
             </div>
+
+            {/* Password Modal */}
+            {showPasswordModal && (
+                <div className="modal-overlay active" onClick={e => e.target === e.currentTarget && setShowPasswordModal(false)}>
+                    <div className="modal" style={{ maxWidth: 400 }}>
+                        <div className="modal-header">
+                            <h3>Cambiar Contraseña</h3>
+                            <button className="modal-close" onClick={() => setShowPasswordModal(false)}>×</button>
+                        </div>
+                        <div className="modal-body">
+                            {passSuccess ? (
+                                <div style={{ color: '#16a34a', background: '#dcfce7', padding: '12px', borderRadius: '6px', textAlign: 'center', marginBottom: '16px' }}>
+                                    ¡Contraseña actualizada correctamente!
+                                </div>
+                            ) : (
+                                <form id="passForm" onSubmit={handlePasswordSubmit}>
+                                    {passError && (
+                                        <div style={{ color: '#dc2626', background: '#fee2e2', padding: '10px', borderRadius: '6px', fontSize: '13px', marginBottom: '16px' }}>
+                                            {passError}
+                                        </div>
+                                    )}
+                                    <div className="form-group">
+                                        <label>Contraseña actual *</label>
+                                        <input type="password" required
+                                            value={passForm.current}
+                                            onChange={e => setPassForm(prev => ({ ...prev, current: e.target.value }))}
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label>Nueva contraseña *</label>
+                                        <input type="password" required minLength={6}
+                                            value={passForm.new1}
+                                            onChange={e => setPassForm(prev => ({ ...prev, new1: e.target.value }))}
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label>Confirmar nueva contraseña *</label>
+                                        <input type="password" required minLength={6}
+                                            value={passForm.new2}
+                                            onChange={e => setPassForm(prev => ({ ...prev, new2: e.target.value }))}
+                                        />
+                                    </div>
+                                </form>
+                            )}
+                        </div>
+                        <div className="modal-footer">
+                            <button className="btn btn-outline" onClick={() => setShowPasswordModal(false)}>Cancelar</button>
+                            {!passSuccess && (
+                                <button type="submit" form="passForm" className="btn btn-primary" disabled={passLoading}>
+                                    {passLoading ? 'Guardando...' : 'Guardar'}
+                                </button>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
