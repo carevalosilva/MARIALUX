@@ -14,7 +14,11 @@ export default function Footer() {
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
                     <div className="col-span-1 md:col-span-2">
                         <div className="flex items-center gap-2 mb-6">
-                            <span className="material-icons-outlined text-primary text-2xl">church</span>
+                            <svg viewBox="0 0 24 24" fill="currentColor" className="text-primary w-7 h-7">
+                                <path d="M12 1 C7 1 4 6 4 11 C4 16 2 20 2 22 L22 22 C22 20 20 16 20 11 C20 6 17 1 12 1 Z" />
+                                <ellipse cx="12" cy="8.5" rx="3.5" ry="4.5" className="fill-white dark:fill-background-dark" />
+                                <path d="M12 15 L14.5 20 L9.5 20 Z" className="fill-white dark:fill-background-dark" />
+                            </svg>
                             <span className="serif-font text-lg font-bold tracking-tight uppercase">
                                 {p1}<span className="text-primary">{p2}</span>
                             </span>

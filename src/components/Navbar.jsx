@@ -43,8 +43,9 @@ export default function Navbar() {
                     <Link className={linkClass('/')} to="/">Inicio</Link>
                     <Link className={linkClass('/explorador')} to="/explorador">Explorador</Link>
                 </div>
-                <div className="flex items-center gap-3">
-                    <form onSubmit={handleSearch} className="relative group">
+                <div className="flex items-center gap-2 sm:gap-3">
+                    {/* Full search bar – visible on sm+ screens */}
+                    <form onSubmit={handleSearch} className="relative group hidden sm:block">
                         <span className="material-icons-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors">search</span>
                         <input
                             className="pl-10 pr-4 py-2 bg-slate-50 dark:bg-slate-800 border-transparent focus:border-primary focus:ring-0 rounded-full text-sm w-48 transition-all focus:w-64"
@@ -53,10 +54,18 @@ export default function Navbar() {
                             onChange={e => setSearchTerm(e.target.value)}
                         />
                     </form>
+                    {/* Compact search icon – visible only on mobile */}
+                    <Link
+                        to="/explorador"
+                        className="sm:hidden w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-300 hover:bg-primary/10 hover:text-primary transition-all duration-300 active:scale-90"
+                        aria-label="Buscar"
+                    >
+                        <span className="material-icons-outlined text-xl">search</span>
+                    </Link>
                     <button
                         onClick={toggleTheme}
                         aria-label={theme === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
-                        className="w-10 h-10 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-300 hover:bg-primary/10 hover:text-primary dark:hover:bg-primary/20 dark:hover:text-primary transition-all duration-300 active:scale-90"
+                        className="w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-300 hover:bg-primary/10 hover:text-primary dark:hover:bg-primary/20 dark:hover:text-primary transition-all duration-300 active:scale-90"
                     >
                         <span className="material-icons-outlined text-xl transition-transform duration-500" style={{ transform: theme === 'dark' ? 'rotate(360deg)' : 'rotate(0deg)' }}>
                             {theme === 'dark' ? 'light_mode' : 'dark_mode'}
