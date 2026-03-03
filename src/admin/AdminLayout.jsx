@@ -98,6 +98,11 @@ export default function AdminLayout({ children, title, section }) {
 
     return (
         <div className={`admin-layout${sidebarCollapsed ? ' sidebar-collapsed' : ''}`}>
+            {/* Sidebar backdrop for mobile */}
+            {!sidebarCollapsed && (
+                <div className="sidebar-backdrop active" onClick={() => setSidebarCollapsed(true)} />
+            )}
+
             {/* Sidebar */}
             <aside className={`sidebar${sidebarCollapsed ? ' collapsed' : ''}`}>
                 <div className="sidebar-header">
@@ -122,7 +127,8 @@ export default function AdminLayout({ children, title, section }) {
                             <div className="nav-section"><span className="sidebar-text">{group.section}</span></div>
                             {group.items.map(item => (
                                 <Link key={item.path} to={item.path}
-                                    className={loc.pathname === item.path ? 'active' : ''}>
+                                    className={loc.pathname === item.path ? 'active' : ''}
+                                    onClick={() => { if (window.innerWidth <= 768) setSidebarCollapsed(true); }}>
                                     {item.iconSvg ? (
                                         <span className="icon" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 20, textAlign: 'center' }}>{item.iconSvg}</span>
                                     ) : (
@@ -154,6 +160,11 @@ export default function AdminLayout({ children, title, section }) {
             {/* Main content */}
             <div className="main-content">
                 <header className="main-header">
+                    {/* Mobile hamburger button */}
+                    <button className="sidebar-toggle mobile-toggle" onClick={() => setSidebarCollapsed(c => !c)}
+                        style={{ display: 'none' }}>
+                        <span className="material-icons-outlined" style={{ fontSize: 22, color: '#334155' }}>menu</span>
+                    </button>
                     <div>
                         <h1>{title || 'Dashboard'}</h1>
                         <div className="breadcrumb">
