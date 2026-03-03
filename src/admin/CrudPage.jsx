@@ -3,7 +3,7 @@ import AdminLayout from './AdminLayout';
 import { adminList, adminCreate, adminUpdate, adminDelete, adminFetchAll, uploadImage } from '../api';
 
 // ── Field configs per table ─────────────────────────────────
-const ESTATUS = ['Aparición aprobada', 'Dogma definido', 'Devoción popular', 'Culto aprobado', 'Coronación canónica', 'Patronazgo papal'];
+const ESTATUS = ['Culto Universal', 'Aprobación Pontificia', 'Coronación Pontificia', 'Patrona Nacional', 'Culto Local', 'Aparición aprobada por la Santa Sede', 'En estudio'];
 const TIPOS_ORIGEN = ['Aparición', 'Patronazgo', 'Dogma', 'Devoción popular', 'Imagen encontrada', 'Visión mística'];
 
 const FIELD_CONFIGS = {

@@ -33,10 +33,12 @@ export default function Home() {
                         Santa María, Madre de Dios
                     </span>
                     <h1 className="serif-font text-5xl md:text-7xl text-slate-900 dark:text-white leading-tight mb-8 italic">
-                        Bajo tu amparo<br />nos acogemos
+                        {(params.hero_titulo || 'Bajo tu amparo\nnos acogemos').split('\n').map((line, i, arr) => (
+                            <span key={i}>{line}{i < arr.length - 1 && <br />}</span>
+                        ))}
                     </h1>
                     <p className="text-lg md:text-xl text-slate-600 dark:text-slate-400 font-light leading-relaxed mb-10 max-w-2xl mx-auto">
-                        Explore la riqueza histórica y espiritual de las diferentes manifestaciones de la Virgen María a través del tiempo y la geografía.
+                        {params.hero_subtitulo || 'Explore la riqueza histórica y espiritual de las diferentes manifestaciones de la Virgen María a través del tiempo y la geografía.'}
                     </p>
                     <div className="flex flex-col items-center gap-4">
                         <a className="bg-primary hover:bg-primary/90 text-white px-10 py-4 rounded-full font-medium transition-all shadow-lg shadow-primary/20 flex items-center gap-2" href="#explorar">

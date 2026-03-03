@@ -183,6 +183,16 @@ a:hover {
     display: flex;
     align-items: center;
     gap: 10px;
+    overflow: hidden;
+    min-width: 0;
+}
+
+.sidebar-header .logo #sidebar-site-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+    flex: 1;
 }
 
 .sidebar-header .logo-icon {
@@ -196,6 +206,7 @@ a:hover {
     color: #fff;
     font-weight: 700;
     font-size: 16px;
+    flex-shrink: 0;
 }
 
 .sidebar-header .badge {
@@ -206,6 +217,7 @@ a:hover {
     border-radius: 10px;
     font-weight: 600;
     margin-left: auto;
+    flex-shrink: 0;
 }
 
 .sidebar-nav {

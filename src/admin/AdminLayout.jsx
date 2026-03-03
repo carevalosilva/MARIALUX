@@ -11,7 +11,13 @@ const NAV_ITEMS = [
     },
     {
         section: 'Contenido', items: [
-            { path: '/admin/advocaciones', icon: 'church', label: 'Advocaciones' },
+            {
+                path: '/admin/advocaciones', icon: 'church', label: 'Advocaciones', iconSvg: (
+                    <svg viewBox="0 0 24 24" fill="currentColor" style={{ width: 16, height: 16 }}>
+                        <path d="M12 1 C7 1 4 6 4 11 C4 16 2 20 2 22 L22 22 C22 20 20 16 20 11 C20 6 17 1 12 1 Z" />
+                    </svg>
+                )
+            },
             { path: '/admin/continentes', icon: 'public', label: 'Continentes' },
             { path: '/admin/paises', icon: 'flag', label: 'Países' },
             { path: '/admin/iconografia', icon: 'palette', label: 'Iconografía' },
@@ -32,6 +38,7 @@ export default function AdminLayout({ children, title, section }) {
     const params = useSiteParams();
     const [user, setUser] = useState(null);
     const [checking, setChecking] = useState(true);
+    const [sidebarCollapsed, setSidebarCollapsed] = useState(() => window.innerWidth < 768);
     const siteName = params.nombre_sitio || 'MARIALUX';
 
     // Password modal state
@@ -90,25 +97,38 @@ export default function AdminLayout({ children, title, section }) {
     if (checking) return <div className="min-h-screen flex items-center justify-center text-slate-400">Verificando sesión...</div>;
 
     return (
-        <div className="admin-layout">
+        <div className={`admin-layout${sidebarCollapsed ? ' sidebar-collapsed' : ''}`}>
             {/* Sidebar */}
-            <aside className="sidebar">
+            <aside className={`sidebar${sidebarCollapsed ? ' collapsed' : ''}`}>
                 <div className="sidebar-header">
                     <div className="logo">
-                        <div className="logo-icon">✝</div>
-                        <span>{siteName}</span>
-                        <span className="badge">Admin</span>
+                        <div className="logo-icon">
+                            <svg viewBox="0 0 24 24" fill="currentColor" style={{ width: 20, height: 20, color: 'white' }}>
+                                <path d="M12 1 C7 1 4 6 4 11 C4 16 2 20 2 22 L22 22 C22 20 20 16 20 11 C20 6 17 1 12 1 Z" />
+                                <ellipse cx="12" cy="8.5" rx="3.5" ry="4.5" fill="#135bec" />
+                                <path d="M12 15 L14.5 20 L9.5 20 Z" fill="#135bec" />
+                            </svg>
+                        </div>
+                        <span className="sidebar-text">{siteName}</span>
+                        <span className="sidebar-text badge">Admin</span>
                     </div>
+                    <button className="sidebar-toggle" onClick={() => setSidebarCollapsed(c => !c)} title={sidebarCollapsed ? 'Expandir menú' : 'Colapsar menú'}>
+                        <span className="material-icons-outlined" style={{ fontSize: 20 }}>{sidebarCollapsed ? 'menu' : 'menu_open'}</span>
+                    </button>
                 </div>
                 <nav className="sidebar-nav">
                     {NAV_ITEMS.map(group => (
                         <div key={group.section}>
-                            <div className="nav-section">{group.section}</div>
+                            <div className="nav-section"><span className="sidebar-text">{group.section}</span></div>
                             {group.items.map(item => (
                                 <Link key={item.path} to={item.path}
                                     className={loc.pathname === item.path ? 'active' : ''}>
-                                    <span className="icon material-icons-outlined">{item.icon}</span>
-                                    {item.label}
+                                    {item.iconSvg ? (
+                                        <span className="icon" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 20, textAlign: 'center' }}>{item.iconSvg}</span>
+                                    ) : (
+                                        <span className="icon material-icons-outlined">{item.icon}</span>
+                                    )}
+                                    <span className="sidebar-text">{item.label}</span>
                                 </Link>
                             ))}
                         </div>
@@ -116,7 +136,7 @@ export default function AdminLayout({ children, title, section }) {
                 </nav>
                 <div className="sidebar-footer">
                     <div className="avatar">{(user?.nombre || user?.email || 'A')[0].toUpperCase()}</div>
-                    <div className="user-info">
+                    <div className="user-info sidebar-text">
                         <div className="user-name">{user?.nombre || user?.email}</div>
                         <div className="user-role">{user?.rol || 'admin'}</div>
                     </div>
