@@ -4,7 +4,7 @@ import { adminList, adminCreate, adminUpdate, adminDelete, adminFetchAll, upload
 
 // ── Field configs per table ─────────────────────────────────
 const ESTATUS = ['Culto Universal', 'Aprobación Pontificia', 'Coronación Pontificia', 'Patrona Nacional', 'Culto Local', 'Aparición aprobada por la Santa Sede', 'En estudio'];
-const TIPOS_ORIGEN = ['Aparición', 'Patronazgo', 'Dogma', 'Devoción popular', 'Imagen encontrada', 'Visión mística'];
+const TIPOS_ORIGEN = ['Aparición', 'Imagen Hallada', 'Patronazgo Histórico', 'Iconografía Dogmática'];
 
 const FIELD_CONFIGS = {
     advocaciones: {
