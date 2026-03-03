@@ -1,5 +1,5 @@
 // ============================================================
-// MARIALUX — Express API Server
+// Express API Server
 // All Supabase logic is encapsulated here.
 // Frontend only receives rendered data, no direct DB access.
 // ============================================================
@@ -500,7 +500,7 @@ if (fs.existsSync(distPath)) {
 // ── Start ───────────────────────────────────────────────────
 app.listen(PORT, () => {
     console.log('');
-    console.log('  ✝  MARIALUX API Server');
+    console.log('  ✝  API Server');
     console.log('  ─────────────────────────');
     console.log(`  🌐 http://localhost:${PORT}`);
     console.log(`  📷 Upload: POST /api/upload-image`);

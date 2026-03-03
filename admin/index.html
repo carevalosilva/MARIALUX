@@ -110,7 +110,7 @@
                     <div class="relative group">
                         <input id="email"
                             class="block w-full px-4 py-3 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-sm"
-                            placeholder="ejemplo@marialux.com" type="email" required autofocus />
+                            placeholder="ejemplo@correo.com" type="email" required autofocus />
                     </div>
                 </div>
                 <!-- Password Input -->
@@ -247,7 +247,7 @@
                 if (!data) return;
                 const params = {};
                 data.forEach(r => { params[r.clave] = r.valor; });
-                const name = params.nombre_sitio || 'MARIALUX';
+                const name = params.nombre_sitio || '';
                 const el = document.getElementById('login-site-name');
                 if (el) el.textContent = name;
                 const title = document.getElementById('page-title');

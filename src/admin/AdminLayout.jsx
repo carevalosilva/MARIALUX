@@ -39,7 +39,7 @@ export default function AdminLayout({ children, title, section }) {
     const [user, setUser] = useState(null);
     const [checking, setChecking] = useState(true);
     const [sidebarCollapsed, setSidebarCollapsed] = useState(() => window.innerWidth < 768);
-    const siteName = params.nombre_sitio || 'MARIALUX';
+    const siteName = params.nombre_sitio || '';
 
     // Password modal state
     const [showPasswordModal, setShowPasswordModal] = useState(false);

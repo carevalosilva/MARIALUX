@@ -1,5 +1,5 @@
 // ============================================================
-// MARIALUX Admin — Generic CRUD Engine
+// Admin — Generic CRUD Engine
 // Renders filters, data grid, modals, and pagination
 // ============================================================
 

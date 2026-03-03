@@ -6,7 +6,7 @@ import { submitContacto } from '../api';
 
 export default function Contacto() {
     const params = useSiteParams();
-    const siteName = params.nombre_sitio || 'MARIALUX';
+    const siteName = params.nombre_sitio || '';
 
     const [form, setForm] = useState({ nombre: '', email: '', asunto: '', mensaje: '' });
     const [sending, setSending] = useState(false);
@@ -81,8 +81,8 @@ export default function Contacto() {
                         {/* Success / Error Banner */}
                         {result && (
                             <div className={`flex items-center gap-3 px-5 py-4 rounded-xl mb-8 text-sm font-medium ${result.type === 'success'
-                                    ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800'
-                                    : 'bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 border border-red-200 dark:border-red-800'
+                                ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800'
+                                : 'bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 border border-red-200 dark:border-red-800'
                                 }`}>
                                 <span className="material-icons-outlined text-lg">
                                     {result.type === 'success' ? 'check_circle' : 'error'}

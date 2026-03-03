@@ -12,7 +12,7 @@ export default function Home() {
     const params = useSiteParams();
 
     useEffect(() => {
-        document.title = 'Inicio | ' + (params.nombre_sitio || 'MARIALUX');
+        document.title = 'Inicio | ' + (params.nombre_sitio || '');
     }, [params]);
 
     const cards = [

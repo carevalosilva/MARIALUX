@@ -1,5 +1,5 @@
 // ============================================================
-// MARIALUX Admin — Supabase Client & Auth
+// Admin — Supabase Client & Auth
 // ============================================================
 
 const SUPABASE_URL = 'https://abkseebmtwmfxmrgiqgr.supabase.co';

@@ -20,7 +20,7 @@ export default function Detalle() {
     useEffect(() => {
         if (!slug) { setLoading(false); setError('No se especificó una advocación'); return; }
         fetchAdvocacion(slug)
-            .then(data => { setAdv(data); document.title = data.nombre + ' | ' + (siteParams.nombre_sitio || 'MARIALUX'); })
+            .then(data => { setAdv(data); document.title = data.nombre + ' | ' + (siteParams.nombre_sitio || ''); })
             .catch(e => setError(e.message))
             .finally(() => setLoading(false));
     }, [slug, siteParams]);

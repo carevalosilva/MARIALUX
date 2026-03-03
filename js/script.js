@@ -1,16 +1,19 @@
 // ============================================================
-// MARIALUX — Main Application Script
+// Main Application Script
 // ============================================================
 
-function marialuxInit() {
-    console.log('[MARIALUX] App initialized, readyState:', document.readyState);
+// Global site name (loaded dynamically from DB)
+var _siteName = '';
+
+function appInit() {
+    console.log('[APP] App initialized, readyState:', document.readyState);
 
     // --- Navigation Active State ---
     var rawPath = window.location.pathname.split('/').pop() || 'index.html';
     // Normalize: remove .html extension for consistent matching
     var currentPath = rawPath.replace('.html', '');
     if (currentPath === '') currentPath = 'index';
-    console.log('[MARIALUX] Current path:', currentPath, '(raw:', rawPath, ')');
+    console.log('[APP] Current path:', currentPath, '(raw:', rawPath, ')');
 
     document.querySelectorAll('nav a').forEach(function (link) {
         var href = (link.getAttribute('href') || '').replace('.html', '');
@@ -21,26 +24,34 @@ function marialuxInit() {
 
     // --- Page Routers (wrapped to catch errors) ---
     if (currentPath === 'detalle') {
-        console.log('[MARIALUX] >> Routing to DETALLE');
+        console.log('[APP] >> Routing to DETALLE');
         initDetallePage().catch(function (err) {
-            console.error('[MARIALUX] Detalle init error:', err);
+            console.error('[APP] Detalle init error:', err);
         });
     } else if (currentPath === 'explorador') {
-        console.log('[MARIALUX] >> Routing to EXPLORADOR');
+        console.log('[APP] >> Routing to EXPLORADOR');
         initExploradorPage().catch(function (err) {
-            console.error('[MARIALUX] Explorador init error:', err);
+            console.error('[APP] Explorador init error:', err);
         });
     } else {
-        console.log('[MARIALUX] >> No page-specific init for:', currentPath);
+        console.log('[APP] >> No page-specific init for:', currentPath);
     }
 }
 
 // Robust init: works even if DOMContentLoaded already fired
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', marialuxInit);
+    document.addEventListener('DOMContentLoaded', appInit);
 } else {
-    marialuxInit();
+    appInit();
 }
+
+// Load site name from DB
+(async function () {
+    try {
+        var params = await fetchParametrosSitio();
+        _siteName = params.nombre_sitio || '';
+    } catch (e) { /* ignore */ }
+})();
 
 // ============================================================
 // PÁGINA: DETALLE (Ficha de Advocación)
@@ -51,7 +62,7 @@ async function initDetallePage() {
     var slug = urlParams.get('slug');
 
     if (!slug || slug === 'undefined' || slug === 'null' || slug.trim() === '') {
-        console.warn('[MARIALUX] No valid slug in URL — redirecting to explorador');
+        console.warn('[APP] No valid slug in URL — redirecting to explorador');
         window.location.replace('explorador');
         return;
     }
@@ -63,7 +74,7 @@ async function initDetallePage() {
     var result = await fetchAdvocacionBySlug(slug);
 
     if (result.error || !result.data) {
-        console.error('[MARIALUX] Advocación not found for slug:', slug);
+        console.error('[APP] Advocación not found for slug:', slug);
         if (main) main.style.opacity = '1';
         return;
     }
@@ -90,7 +101,7 @@ function clearDetalleFields() {
     if (titleEl) titleEl.textContent = '';
 
     // --- Reset Document title ---
-    document.title = 'Detalle | MARIALUX';
+    document.title = 'Detalle | ' + _siteName;
 
     // --- Reset Breadcrumbs ---
     var breadcrumbContinent = document.querySelector('#breadcrumb-continent');
@@ -164,7 +175,7 @@ function renderDetalle(adv) {
     if (titleEl) titleEl.textContent = adv.nombre;
 
     // --- Document title ---
-    document.title = adv.nombre + ' | MARIALUX';
+    document.title = adv.nombre + ' | ' + _siteName;
 
     // --- Breadcrumbs ---
     var breadcrumbContinent = document.querySelector('#breadcrumb-continent');
@@ -309,7 +320,7 @@ function generatePDF(adv) {
         doc.line(marginL, pageH - 15, pageW - marginR, pageH - 15);
         doc.setFontSize(7);
         doc.setTextColor(grayColor[0], grayColor[1], grayColor[2]);
-        doc.text('MARIALUX — Ficha de Advocación Mariana', marginL, pageH - 10);
+        doc.text((_siteName || 'Ficha') + ' — Ficha de Advocación Mariana', marginL, pageH - 10);
         doc.text('Página ' + doc.internal.getNumberOfPages(), pageW - marginR, pageH - 10, { align: 'right' });
     }
 
@@ -335,11 +346,11 @@ function generatePDF(adv) {
     doc.setFillColor(primaryColor[0], primaryColor[1], primaryColor[2]);
     doc.rect(0, 0, pageW, 40, 'F');
 
-    // MARIALUX brand
+    // Site brand
     doc.setFontSize(10);
     doc.setTextColor(255, 255, 255);
     doc.setFont('helvetica', 'normal');
-    doc.text('MARIALUX', marginL, 15);
+    doc.text(_siteName || 'Ficha Mariana', marginL, 15);
 
     // Subtitle
     doc.setFontSize(7);
@@ -646,7 +657,7 @@ function generatePDF(adv) {
     // ============================================
     var filename = (adv.slug || 'ficha-mariana') + '.pdf';
     doc.save(filename);
-    console.log('[MARIALUX] PDF generated:', filename);
+    console.log('[APP] PDF generated:', filename);
 }
 
 // ============================================================
@@ -666,7 +677,7 @@ var explorerState = {
 };
 
 async function initExploradorPage() {
-    console.log('[MARIALUX] initExploradorPage START');
+    console.log('[APP] initExploradorPage START');
 
     // --- Read URL query params to pre-activate filters ---
     var urlParams = new URLSearchParams(window.location.search);
@@ -677,7 +688,7 @@ async function initExploradorPage() {
         // Check the corresponding checkbox in the UI
         var cb = document.querySelector('[data-filter-continente="' + paramContinente + '"]');
         if (cb) cb.checked = true;
-        console.log('[MARIALUX] Pre-filter continente:', paramContinente);
+        console.log('[APP] Pre-filter continente:', paramContinente);
     }
 
     var paramSiglo = urlParams.get('siglo');
@@ -689,7 +700,7 @@ async function initExploradorPage() {
             sigloBtn.classList.add('bg-primary', 'text-white', 'border-primary');
             sigloBtn.classList.remove('border-slate-200', 'dark:border-slate-700');
         }
-        console.log('[MARIALUX] Pre-filter siglo:', paramSiglo);
+        console.log('[APP] Pre-filter siglo:', paramSiglo);
     }
 
     var paramTipo = urlParams.get('tipo');
@@ -698,13 +709,13 @@ async function initExploradorPage() {
         // Set the select dropdown value
         var tipoSelect = document.querySelector('#filter-tipo-origen');
         if (tipoSelect) tipoSelect.value = paramTipo;
-        console.log('[MARIALUX] Pre-filter tipo:', paramTipo);
+        console.log('[APP] Pre-filter tipo:', paramTipo);
     }
 
     // Load filter counts
-    console.log('[MARIALUX] >> calling loadFilterOptions...');
+    console.log('[APP] >> calling loadFilterOptions...');
     await loadFilterOptions();
-    console.log('[MARIALUX] >> loadFilterOptions DONE');
+    console.log('[APP] >> loadFilterOptions DONE');
 
     // Setup search
     var searchInput = document.querySelector('#explorer-search');
@@ -716,7 +727,7 @@ async function initExploradorPage() {
                 explorerState.search = e.target.value.trim();
                 explorerState.page = 1;
                 loadAdvocaciones().catch(function (err) {
-                    console.error('[MARIALUX] Search load error:', err.message);
+                    console.error('[APP] Search load error:', err.message);
                 });
             }, 400);
         });
@@ -734,7 +745,7 @@ async function initExploradorPage() {
             }
             explorerState.page = 1;
             loadAdvocaciones().catch(function (err) {
-                console.error('[MARIALUX] Continent filter error:', err.message);
+                console.error('[APP] Continent filter error:', err.message);
             });
         });
     });
@@ -758,7 +769,7 @@ async function initExploradorPage() {
             }
             explorerState.page = 1;
             loadAdvocaciones().catch(function (err) {
-                console.error('[MARIALUX] Siglo filter error:', err.message);
+                console.error('[APP] Siglo filter error:', err.message);
             });
         });
     });
@@ -770,7 +781,7 @@ async function initExploradorPage() {
             explorerState.tipoOrigen = tipoSelect.value || null;
             explorerState.page = 1;
             loadAdvocaciones().catch(function (err) {
-                console.error('[MARIALUX] Tipo filter error:', err.message);
+                console.error('[APP] Tipo filter error:', err.message);
             });
         });
     }
@@ -782,7 +793,7 @@ async function initExploradorPage() {
             explorerState.estatus = (explorerState.estatus === estatus) ? null : estatus;
             explorerState.page = 1;
             loadAdvocaciones().catch(function (err) {
-                console.error('[MARIALUX] Estatus filter error:', err.message);
+                console.error('[APP] Estatus filter error:', err.message);
             });
         });
     });
@@ -809,19 +820,19 @@ async function initExploradorPage() {
             if (searchInput) searchInput.value = '';
 
             loadAdvocaciones().catch(function (err) {
-                console.error('[MARIALUX] Clear filters error:', err.message);
+                console.error('[APP] Clear filters error:', err.message);
             });
         });
     }
 
     // Initial load
-    console.log('[MARIALUX] >> calling initial loadAdvocaciones...');
+    console.log('[APP] >> calling initial loadAdvocaciones...');
     await loadAdvocaciones();
-    console.log('[MARIALUX] initExploradorPage COMPLETE');
+    console.log('[APP] initExploradorPage COMPLETE');
 }
 
 async function loadFilterOptions() {
-    console.log('[MARIALUX] loadFilterOptions START');
+    console.log('[APP] loadFilterOptions START');
     try {
         var counts = await fetchEstatusCounts();
         document.querySelectorAll('[data-filter-estatus]').forEach(function (el) {
@@ -832,17 +843,17 @@ async function loadFilterOptions() {
             }
         });
     } catch (err) {
-        console.error('[MARIALUX] loadFilterOptions error:', err.message);
+        console.error('[APP] loadFilterOptions error:', err.message);
     }
 }
 
 async function loadAdvocaciones() {
-    console.log('[MARIALUX] loadAdvocaciones START, state:', JSON.stringify(explorerState));
+    console.log('[APP] loadAdvocaciones START, state:', JSON.stringify(explorerState));
     var grid = document.querySelector('#explorer-grid');
     var resultsTitle = document.querySelector('#explorer-results-title');
     var resultsCount = document.querySelector('#explorer-results-count');
 
-    console.log('[MARIALUX] grid found:', !!grid);
+    console.log('[APP] grid found:', !!grid);
     if (!grid) return;
 
     // Loading state
@@ -850,9 +861,9 @@ async function loadAdvocaciones() {
     grid.style.transition = 'opacity 0.2s ease';
 
     try {
-        console.log('[MARIALUX] >> calling fetchAdvocaciones...');
+        console.log('[APP] >> calling fetchAdvocaciones...');
         var result = await fetchAdvocaciones(explorerState);
-        console.log('[MARIALUX] >> fetchAdvocaciones returned:', result.error ? 'ERROR' : 'OK', 'count:', result.count, 'data.length:', result.data ? result.data.length : 0);
+        console.log('[APP] >> fetchAdvocaciones returned:', result.error ? 'ERROR' : 'OK', 'count:', result.count, 'data.length:', result.data ? result.data.length : 0);
 
         if (result.error) {
             grid.innerHTML = '<div class="col-span-full text-center py-16 text-slate-500">' +
@@ -895,7 +906,7 @@ async function loadAdvocaciones() {
         renderPagination(count);
 
     } catch (err) {
-        console.error('[MARIALUX] loadAdvocaciones error:', err.message);
+        console.error('[APP] loadAdvocaciones error:', err.message);
         grid.innerHTML = '<div class="col-span-full text-center py-16 text-slate-500">' +
             '<span class="material-icons text-4xl mb-4 block">error_outline</span>' +
             'Error inesperado. Recargue la página.</div>';
@@ -1012,7 +1023,7 @@ function renderPagination(totalCount) {
             if (page >= 1 && page <= totalPages && page !== current) {
                 explorerState.page = page;
                 loadAdvocaciones().catch(function (err) {
-                    console.error('[MARIALUX] Pagination error:', err.message);
+                    console.error('[APP] Pagination error:', err.message);
                 });
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }

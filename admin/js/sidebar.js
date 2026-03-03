@@ -124,7 +124,7 @@ async function loadSiteNameInAdmin() {
         const params = {};
         data.forEach(function (row) { params[row.clave] = row.valor; });
 
-        const siteName = params.nombre_sitio || 'MARIALUX';
+        const siteName = params.nombre_sitio || '';
 
         // Update sidebar logo
         const sidebarName = document.getElementById('sidebar-site-name');

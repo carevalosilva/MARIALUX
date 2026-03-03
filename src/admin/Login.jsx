@@ -14,8 +14,8 @@ export default function Login() {
     useEffect(() => {
         document.title = 'Admin Login';
         fetchParametros().then(p => {
-            setSiteName(p.nombre_sitio || 'MARIALUX');
-            document.title = (p.nombre_sitio || 'MARIALUX') + ' Admin Login';
+            setSiteName(p.nombre_sitio || '');
+            document.title = (p.nombre_sitio || '') + ' Admin Login';
         }).catch(() => { });
         // If already logged in, redirect
         if (sessionStorage.getItem('auth_token')) nav('/admin/dashboard');

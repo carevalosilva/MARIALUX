@@ -6,7 +6,7 @@ import { useSiteParams } from '../context/SiteParamsContext';
 export default function SobreNosotros() {
     const params = useSiteParams();
     const contenido = params.quienes_somos_contenido || '';
-    const siteName = params.nombre_sitio || 'MARIALUX';
+    const siteName = params.nombre_sitio || '';
 
     useEffect(() => {
         document.title = 'Sobre Nosotros | ' + siteName;

@@ -28,7 +28,7 @@ export default function Explorador() {
     });
 
     useEffect(() => {
-        document.title = 'Explorador | ' + (params.nombre_sitio || 'MARIALUX');
+        document.title = 'Explorador | ' + (params.nombre_sitio || '');
     }, [params]);
 
     useEffect(() => {

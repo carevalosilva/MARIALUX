@@ -1,5 +1,5 @@
 // ============================================================
-// MARIALUX — Supabase Client & Data Access Layer
+// Supabase Client & Data Access Layer
 // ============================================================
 
 const SUPABASE_URL = 'https://abkseebmtwmfxmrgiqgr.supabase.co';
@@ -15,11 +15,11 @@ function getSupabase() {
     if (typeof window.supabase !== 'undefined' && window.supabase.createClient) {
         _supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
         _supabaseReady = true;
-        console.log('[MARIALUX] Supabase client initialized');
+        console.log('[APP] Supabase client initialized');
         return _supabaseClient;
     }
 
-    console.warn('[MARIALUX] Supabase JS library not yet available');
+    console.warn('[APP] Supabase JS library not yet available');
     return null;
 }
 
@@ -104,7 +104,7 @@ async function fetchAdvocaciones(opts) {
         const { data, error, count } = await query;
 
         if (error) {
-            console.error('[MARIALUX] Error fetching advocaciones:', error.message);
+            console.error('[APP] Error fetching advocaciones:', error.message);
             return { data: [], count: 0, error: error };
         }
 
@@ -114,7 +114,7 @@ async function fetchAdvocaciones(opts) {
             error: null
         };
     } catch (err) {
-        console.error('[MARIALUX] fetchAdvocaciones exception:', err.message);
+        console.error('[APP] fetchAdvocaciones exception:', err.message);
         return { data: [], count: 0, error: err };
     }
 }
@@ -141,13 +141,13 @@ async function fetchAdvocacionBySlug(slug) {
             .maybeSingle();
 
         if (error) {
-            console.error('[MARIALUX] Error fetching advocación:', error.message);
+            console.error('[APP] Error fetching advocación:', error.message);
             return { data: null, error: error };
         }
 
         return { data: data, error: null };
     } catch (err) {
-        console.error('[MARIALUX] fetchAdvocacionBySlug exception:', err.message);
+        console.error('[APP] fetchAdvocacionBySlug exception:', err.message);
         return { data: null, error: err };
     }
 }
@@ -164,12 +164,12 @@ async function fetchContinentes() {
             .order('nombre');
 
         if (error) {
-            console.error('[MARIALUX] Error fetching continentes:', error.message);
+            console.error('[APP] Error fetching continentes:', error.message);
             return [];
         }
         return data || [];
     } catch (err) {
-        console.error('[MARIALUX] fetchContinentes exception:', err.message);
+        console.error('[APP] fetchContinentes exception:', err.message);
         return [];
     }
 }
@@ -186,7 +186,7 @@ async function fetchEstatusCounts() {
             .eq('publicado', true);
 
         if (error) {
-            console.error('[MARIALUX] Error fetching estatus counts:', error.message);
+            console.error('[APP] Error fetching estatus counts:', error.message);
             return {};
         }
 
@@ -197,7 +197,7 @@ async function fetchEstatusCounts() {
         });
         return counts;
     } catch (err) {
-        console.error('[MARIALUX] fetchEstatusCounts exception:', err.message);
+        console.error('[APP] fetchEstatusCounts exception:', err.message);
         return {};
     }
 }
@@ -217,7 +217,7 @@ async function fetchParametrosSitio() {
             .select('clave, valor');
 
         if (error) {
-            console.error('[MARIALUX] Error fetching parámetros:', error.message);
+            console.error('[APP] Error fetching parámetros:', error.message);
             return {};
         }
 
@@ -227,7 +227,7 @@ async function fetchParametrosSitio() {
         });
         return params;
     } catch (err) {
-        console.error('[MARIALUX] fetchParametrosSitio exception:', err.message);
+        console.error('[APP] fetchParametrosSitio exception:', err.message);
         return {};
     }
 }
