@@ -98,7 +98,21 @@ app.get('/api/advocaciones', async (req, res) => {
         if (tipoOrigen) query = query.eq('tipo_origen', tipoOrigen);
         if (estatus) query = query.eq('estatus_eclesiastico', estatus);
         if (siglo) query = query.eq('siglo', siglo);
-        if (search) query = query.or(`nombre.ilike.%${search}%,descripcion_corta.ilike.%${search}%`);
+        if (search) {
+            // Accent-insensitive search via PostgreSQL unaccent() function
+            const { data: matchIds, error: rpcError } = await supabase
+                .rpc('search_advocaciones', { search_text: search })
+                .select('id');
+            if (!rpcError && matchIds && matchIds.length > 0) {
+                query = query.in('id', matchIds.map(r => r.id));
+            } else if (rpcError) {
+                // Fallback to regular ilike if RPC not available
+                query = query.or(`nombre.ilike.%${search}%,descripcion_corta.ilike.%${search}%`);
+            } else {
+                // No results from unaccent search
+                return res.json({ data: [], count: 0 });
+            }
+        }
 
         query = query.order(orderBy, { ascending: ascending === 'true' }).range(from, to);
 
