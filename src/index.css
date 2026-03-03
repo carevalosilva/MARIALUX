@@ -1024,7 +1024,7 @@ html.dark body {
   }
 }
 
-/* Sidebar overlay backdrop */
+/* Sidebar overlay backdrop — only on mobile */
 .sidebar-backdrop {
   display: none;
   position: fixed;
@@ -1035,7 +1035,9 @@ html.dark body {
   transition: opacity 0.3s ease;
 }
 
-.sidebar-backdrop.active {
-  display: block;
-  opacity: 1;
+@media (max-width: 768px) {
+  .sidebar-backdrop.active {
+    display: block;
+    opacity: 1;
+  }
 }
