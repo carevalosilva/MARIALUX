@@ -405,7 +405,11 @@ app.post('/api/admin/:table', async (req, res) => {
     const user = await getAuthClient(req);
     if (!user) return res.status(401).json({ error: 'No autenticado' });
 
-    const { data, error } = await supabase.from(req.params.table).insert(req.body).select().single();
+    const client = process.env.SUPABASE_SERVICE_ROLE_KEY
+        ? createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY)
+        : supabase;
+
+    const { data, error } = await client.from(req.params.table).insert(req.body).select().single();
     if (error) return res.status(500).json({ error: error.message });
     res.json(data);
 });
@@ -415,7 +419,11 @@ app.put('/api/admin/:table/:id', async (req, res) => {
     const user = await getAuthClient(req);
     if (!user) return res.status(401).json({ error: 'No autenticado' });
 
-    const { data, error } = await supabase.from(req.params.table).update(req.body).eq('id', req.params.id).select().single();
+    const client = process.env.SUPABASE_SERVICE_ROLE_KEY
+        ? createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY)
+        : supabase;
+
+    const { data, error } = await client.from(req.params.table).update(req.body).eq('id', req.params.id).select().single();
     if (error) return res.status(500).json({ error: error.message });
     res.json(data);
 });
@@ -425,7 +433,11 @@ app.delete('/api/admin/:table/:id', async (req, res) => {
     const user = await getAuthClient(req);
     if (!user) return res.status(401).json({ error: 'No autenticado' });
 
-    const { error } = await supabase.from(req.params.table).delete().eq('id', req.params.id);
+    const client = process.env.SUPABASE_SERVICE_ROLE_KEY
+        ? createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY)
+        : supabase;
+
+    const { error } = await client.from(req.params.table).delete().eq('id', req.params.id);
     if (error) return res.status(500).json({ error: error.message });
     res.json({ success: true });
 });
