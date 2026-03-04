@@ -41,7 +41,11 @@ export default function SobreNosotros() {
                         <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-lg shadow-slate-100/50 dark:shadow-none p-10 md:p-14">
                             <div className="flex items-center gap-3 mb-8">
                                 <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                                    <span className="material-icons-outlined text-primary text-lg">church</span>
+                                    <svg viewBox="0 0 24 24" fill="currentColor" className="text-primary w-6 h-6">
+                                        <path d="M12 1 C7 1 4 6 4 11 C4 16 2 20 2 22 L22 22 C22 20 20 16 20 11 C20 6 17 1 12 1 Z" />
+                                        <ellipse cx="12" cy="8.5" rx="3.5" ry="4.5" className="fill-white dark:fill-slate-900" />
+                                        <path d="M12 15 L14.5 20 L9.5 20 Z" className="fill-white dark:fill-slate-900" />
+                                    </svg>
                                 </div>
                                 <h2 className="serif-font text-2xl text-slate-900 dark:text-white">¿Quiénes Somos?</h2>
                             </div>

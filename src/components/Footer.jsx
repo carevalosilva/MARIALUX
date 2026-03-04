@@ -43,12 +43,12 @@ export default function Footer() {
                 <div className="pt-8 border-t border-primary/5 flex flex-col md:flex-row justify-between items-center gap-6">
                     <p className="text-xs text-slate-400">{copy}</p>
                     <div className="flex items-center gap-4">
-                        <a className="w-8 h-8 flex items-center justify-center rounded-full bg-slate-50 dark:bg-slate-800 text-slate-400 hover:bg-primary hover:text-white transition-all" href="#">
+                        <a className="w-8 h-8 flex items-center justify-center rounded-full bg-slate-50 dark:bg-slate-800 text-slate-400 hover:bg-primary hover:text-white transition-all" href={`https://wa.me/?text=${encodeURIComponent(window.location.href)}`} target="_blank" rel="noopener noreferrer" aria-label="Compartir por WhatsApp">
                             <span className="material-icons-outlined text-base">share</span>
                         </a>
-                        <a className="w-8 h-8 flex items-center justify-center rounded-full bg-slate-50 dark:bg-slate-800 text-slate-400 hover:bg-primary hover:text-white transition-all" href="#">
+                        <Link className="w-8 h-8 flex items-center justify-center rounded-full bg-slate-50 dark:bg-slate-800 text-slate-400 hover:bg-primary hover:text-white transition-all" to="/contacto" aria-label="Contacto">
                             <span className="material-icons-outlined text-base">email</span>
-                        </a>
+                        </Link>
                     </div>
                 </div>
             </div>
