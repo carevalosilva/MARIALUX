@@ -16,9 +16,9 @@ export default function Home() {
     }, [params]);
 
     const cards = [
-        { href: '/explorador?continente=europa', img: mapImg, icon: 'explore', title: 'Por Región', desc: 'Descubra las advocaciones por continentes y santuarios nacionales.' },
-        { href: '/explorador?siglo=Siglo%20XX', img: mosaicImg, icon: 'hourglass_empty', title: 'Por Siglo', desc: 'Un recorrido cronológico desde los primeros siglos hasta la actualidad.' },
-        { href: '/explorador?tipo=Aparición', img: vladImg, icon: 'auto_awesome', title: 'Por Tipo', desc: 'Apariciones, patronazgos, dogmas e iconografías marianas.' },
+        { href: '/explorador', img: mapImg, icon: 'explore', title: 'Por Región', desc: 'Descubra las advocaciones por continentes y santuarios nacionales.' },
+        { href: '/explorador', img: mosaicImg, icon: 'hourglass_empty', title: 'Por Siglo', desc: 'Un recorrido cronológico desde los primeros siglos hasta la actualidad.' },
+        { href: '/explorador', img: vladImg, icon: 'auto_awesome', title: 'Por Tipo', desc: 'Apariciones, patronazgos, dogmas e iconografías marianas.' },
     ];
 
     return (
@@ -33,12 +33,12 @@ export default function Home() {
                         Santa María, Madre de Dios
                     </span>
                     <h1 className="serif-font text-5xl md:text-7xl text-slate-900 dark:text-white leading-tight mb-8 italic">
-                        {(params.hero_titulo || 'Bajo tu amparo\nnos acogemos').split('\n').map((line, i, arr) => (
+                        {(params.hero_titulo || '').split('\n').map((line, i, arr) => (
                             <span key={i}>{line}{i < arr.length - 1 && <br />}</span>
                         ))}
                     </h1>
                     <p className="text-lg md:text-xl text-slate-600 dark:text-slate-400 font-light leading-relaxed mb-10 max-w-2xl mx-auto">
-                        {params.hero_subtitulo || 'Explore la riqueza histórica y espiritual de las diferentes manifestaciones de la Virgen María a través del tiempo y la geografía.'}
+                        {params.hero_subtitulo || ''}
                     </p>
                     <div className="flex flex-col items-center gap-4">
                         <a className="bg-primary hover:bg-primary/90 text-white px-10 py-4 rounded-full font-medium transition-all shadow-lg shadow-primary/20 flex items-center gap-2" href="#explorar">
